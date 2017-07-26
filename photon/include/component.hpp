@@ -1,18 +1,28 @@
+#pragma once
+
 #include <string>
 #include <vector>
 
-#pragma once
-
 class Component {
-private:
+protected:
 	std::string _name;
 	bool _isActive = false;
-
+	virtual void f();
 public:
 	Component(std::string name);
 	std::string Name();
 	void Activate();
 	void Deactivate();
+	void IsActive();
+};
+
+
+class IDComponent : protected Component {
+protected:
+	void f();
+public:
+	IDComponent();
+	std::string id;
 };
 
 

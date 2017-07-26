@@ -134,6 +134,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\component.hpp" />
+    <ClInclude Include="include\entitymanager.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\component.cpp" />

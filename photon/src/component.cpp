@@ -17,3 +17,9 @@ void Component::Activate() {
 void Component::Deactivate() {
 	_isActive = false;
 }
+
+void Component::IsActive() {
+	return _isActive;
+}
+
+IDComponent::IDComponent() : Component("idcomponent") { }

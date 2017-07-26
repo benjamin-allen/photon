@@ -21,6 +21,9 @@
     <ClInclude Include="include\component.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\entitymanager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\component.cpp">
