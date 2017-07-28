@@ -3,7 +3,8 @@
 #include "component.hpp"
 #include <memory>
 
-#define PHOTON_INITIAL_RESERVATION 100
+#define PHOTON_INITIAL_ALLOCATION 100
+#define PHOTON_EXPANSION_COUNT PHOTON_INITIAL ALLOCATION / 2
 
 class EntityManager {
 private:
@@ -11,6 +12,8 @@ private:
 	unsigned int _indexCount;
 	bool _forceUniqueIdentifiers;
 	ComponentRegistry _componentRegistry;
+
+	void Expand();
 public:
 	EntityManager();
 	EntityManager(bool);
@@ -20,6 +23,7 @@ public:
 	void RemoveEntity(std::string);
 	unsigned int GetEntityCount();
 	void SetComponentActiveState(unsigned int, std::string, bool);
+	int GetComponentVectorIndex(std::string);
 	
 	std::vector<std::vector<std::unique_ptr<Component>>> components;
 };
