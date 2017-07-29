@@ -58,3 +58,10 @@ void EntityManager::SetComponentActiveState(unsigned int entity, string componen
 int EntityManager::GetComponentVectorIndex(string component) {
 	return _componentRegistry.GetIndex(component);
 }
+
+void EntityManager::Expand() {
+	unsigned int initSize = components[_componentRegistry.GetIndex<IDComponent>()].size();
+	for(int i = 0; i < components.size(); ++i) {
+		components[i].reserve(initSize + PHOTON_EXPANSION_COUNT);
+	}
+}
