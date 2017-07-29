@@ -13,7 +13,7 @@ public:
 	std::string Name();
 	void Activate();
 	void Deactivate();
-	void IsActive();
+	bool IsActive();
 };
 
 
@@ -33,6 +33,7 @@ private:
 public:
 	template <class C> void Register();
 	template <class C> unsigned int GetIndex();
+	unsigned int GetIndex(std::string);
 };
 
 template <class C>
