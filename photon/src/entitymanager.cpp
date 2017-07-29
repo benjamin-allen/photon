@@ -1,6 +1,7 @@
 #include "entitymanager.hpp"
 
 using std::string;
+using std::unique_ptr;
 
 EntityManager::EntityManager() : EntityManager(false) { }
 
@@ -13,10 +14,11 @@ EntityManager::EntityManager(bool forceUniques) {
 }
 
 unsigned int EntityManager::AddEntity() {
+	unsigned int cIndex = _componentRegistry.GetIndex<IDComponent>();
 	for(unsigned int entity = 0; entity < _indexCount; ++entity) {
-		if(!components[componentRegistry.GetIndex("idcomponent")][entity].IsActive()) {
+		if(components[cIndex][entity]->IsActive() == false) {
 			++_entityCount;
-			components[componentRegistry.GetIndex("idcomponent")][entity].Activate();
+			components[cIndex][entity]->Activate();
 			return entity;
 		}
 	}
@@ -25,14 +27,16 @@ unsigned int EntityManager::AddEntity() {
 }
 
 void EntityManager::RemoveEntity(unsigned int entity) {
-	components[componentRegistry.GetIndex("idcomponent")][entity].Deactivate();
+	components[_componentRegistry.GetIndex<IDComponent>()][entity]->Deactivate();
 	--_entityCount;
 }
 
 void EntityManager::RemoveEntity(string id) {
+	unsigned int cIndex = _componentRegistry.GetIndex<IDComponent>();
 	for(unsigned int entity = 0; entity < _indexCount; ++entity) {
-		if(components[componentRegistry.GetIndex("idcomponent")][entity].id == id) {
-			components[componentRegistry.GetIndex("idcomponent")][entity].Deactivate();
+		unique_ptr<IDComponent> ptr(dynamic_cast<IDComponent*>(components[cIndex][entity].release()));
+		if(ptr->id == id) {
+			components[cIndex][entity]->Deactivate();
 		}
 	}
 }
@@ -44,10 +48,10 @@ unsigned int EntityManager::GetEntityCount() {
 void EntityManager::SetComponentActiveState(unsigned int entity, string componentID, bool newState) {
 	unsigned int cIndex = _componentRegistry.GetIndex(componentID);
 	if(newState == true) {
-		components[cIndex][entity].Activate();
+		components[cIndex][entity]->Activate();
 	}
 	else {
-		components[cIndex][entity].Deactivate();
+		components[cIndex][entity]->Deactivate();
 	}
 }
 
