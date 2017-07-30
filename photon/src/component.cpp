@@ -22,6 +22,9 @@ bool Component::IsActive() {
 	return _isActive;
 }
 
+void Component::f() { }
+void IDComponent::f() { }
+
 IDComponent::IDComponent() : Component("idcomponent") { }
 
 unsigned int ComponentRegistry::GetIndex(string componentID) {
