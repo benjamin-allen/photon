@@ -13,7 +13,8 @@ void ComponentRegistry::Register() {
 		throw std::logic_error("A Component has already been registered under the " + object.Name() + " identifier");
 	}
 	_registry.push_back(object.Name());
-	if(_registry.size() <= preRC) {
+	_registryCount = _registry.size();
+	if(_registryCount <= preRC) {
 		throw std::runtime_error("Component registration failed");
 	}
 }
