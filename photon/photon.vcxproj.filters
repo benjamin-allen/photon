@@ -39,4 +39,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="include\template_component.tpp" />
+    <None Include="include\template_entitymanager.tpp" />
+    <None Include="include\template_system.tpp" />
+  </ItemGroup>
 </Project>

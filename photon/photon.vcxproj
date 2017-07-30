@@ -142,6 +142,11 @@
     <ClCompile Include="src\entitymanager.cpp" />
     <ClCompile Include="src\system.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="include\template_component.tpp" />
+    <None Include="include\template_entitymanager.tpp" />
+    <None Include="include\template_system.tpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
