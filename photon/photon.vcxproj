@@ -135,9 +135,12 @@
   <ItemGroup>
     <ClInclude Include="include\component.hpp" />
     <ClInclude Include="include\entitymanager.hpp" />
+    <ClInclude Include="include\system.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\component.cpp" />
+    <ClCompile Include="src\entitymanager.cpp" />
+    <ClCompile Include="src\system.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

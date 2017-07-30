@@ -6,13 +6,13 @@ private:
 	std::unique_ptr<EntityManager> _target;
 	std::vector<int> _actingIndices;
 protected:
-	virtual void Act();
+	virtual void Act(unsigned int);
 public:
 	System(EntityManager*);
 	virtual void Run();
 	template <class C> void TargetComponent();
 	template <class C> void UntargetComponent();
-}
+};
 
 template <class C>
 void System::TargetComponent() {
