@@ -1,6 +1,7 @@
 #include "component.hpp"
 
 using std::string;
+using std::unique_ptr;
 
 Component::Component(string name) {
 	_name = name;
@@ -22,8 +23,14 @@ bool Component::IsActive() {
 	return _isActive;
 }
 
-void Component::f() { }
-void IDComponent::f() { }
+unique_ptr<Component> Component::NOST() {
+	return nullptr;
+}
+
+unique_ptr<Component> IDComponent::NOST() {
+	unique_ptr<IDComponent> p(new IDComponent);
+	return p;
+}
 
 IDComponent::IDComponent() : Component("idcomponent") { }
 

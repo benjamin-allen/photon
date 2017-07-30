@@ -1,4 +1,5 @@
 #include "entitymanager.hpp"
+#include <typeinfo>
 
 using std::string;
 using std::unique_ptr;
@@ -64,9 +65,11 @@ int EntityManager::GetComponentVectorIndex(string component) {
 }
 
 void EntityManager::Expand() {
-	unsigned int initSize = components[_componentRegistry.GetIndex<IDComponent>()].size();
 	for(unsigned int i = 0; i < components.size(); ++i) {
-		components[i].reserve(_indexCount + PHOTON_EXPANSION_COUNT);
+		components[i].resize(_indexCount + PHOTON_EXPANSION_COUNT);
+		for(unsigned int j = _indexCount; j < components[i].size(); ++j) {
+			components[i][j] = components[i][0]->NOST();
+		}
 	}
 
 	_indexCount += PHOTON_EXPANSION_COUNT;

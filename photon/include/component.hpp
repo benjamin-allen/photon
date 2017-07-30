@@ -3,25 +3,25 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <memory>
 
 class Component {
 protected:
 	std::string _name;
 	bool _isActive = false;
-	virtual void f();
 public:
 	Component(std::string name);
 	std::string Name();
 	void Activate();
 	void Deactivate();
 	bool IsActive();
+	virtual std::unique_ptr<Component> NOST();
 };
 
 
 class IDComponent : public Component {
-protected:
-	void f();
 public:
+	std::unique_ptr<Component> NOST();
 	IDComponent();
 	std::string id;
 };
