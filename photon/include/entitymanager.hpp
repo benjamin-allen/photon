@@ -33,7 +33,7 @@ void EntityManager::RegisterComponent() {
 	if(!std::is_base_of<Component, C>::value) {
 		throw std::invalid_argument("Class is not a component");
 	}
-	componentRegistry.Register<C>();
+	_componentRegistry.Register<C>();
 
 	std::vector<std::unique_ptr<Component>> vector;
 	vector.reserve(_indexCount);
@@ -42,5 +42,5 @@ void EntityManager::RegisterComponent() {
 		vector.push_back(std::move(ptr));
 	}
 
-	components.push_back(vector);
+	components.push_back(std::move(vector));
 }

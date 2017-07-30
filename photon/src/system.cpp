@@ -1,9 +1,7 @@
 #include "system.hpp"
 
-using std::unique_ptr;
-
 System::System(EntityManager* target) {
-	_target = unique_ptr<EntityManager>(target);
+	_target = target;
 	if(!_target) {
 		throw std::invalid_argument("Unsuitable target EntityManager");
 	}
@@ -21,10 +19,10 @@ void System::Run() {
 				break;
 			}
 		}
-
 		if(!hasAllComponents) {
 			continue;
 		}
+		
 		Act(entity);
 	}
 }

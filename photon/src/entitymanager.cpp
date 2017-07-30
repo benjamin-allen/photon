@@ -15,7 +15,8 @@ EntityManager::EntityManager(bool forceUniques) {
 
 unsigned int EntityManager::AddEntity() {
 	unsigned int cIndex = _componentRegistry.GetIndex<IDComponent>();
-	for(unsigned int entity = 0; entity < _indexCount; ++entity) {
+	unsigned int entity;
+	for(entity = 0; entity < _indexCount; ++entity) {
 		if(components[cIndex][entity]->IsActive() == false) {
 			++_entityCount;
 			components[cIndex][entity]->Activate();
@@ -24,6 +25,9 @@ unsigned int EntityManager::AddEntity() {
 	}
 
 	Expand();
+	++_entityCount;
+	components[cIndex][entity]->Activate();
+	return entity;
 }
 
 void EntityManager::RemoveEntity(unsigned int entity) {
@@ -61,7 +65,9 @@ int EntityManager::GetComponentVectorIndex(string component) {
 
 void EntityManager::Expand() {
 	unsigned int initSize = components[_componentRegistry.GetIndex<IDComponent>()].size();
-	for(int i = 0; i < components.size(); ++i) {
-		components[i].reserve(initSize + PHOTON_EXPANSION_COUNT);
+	for(unsigned int i = 0; i < components.size(); ++i) {
+		components[i].reserve(_indexCount + PHOTON_EXPANSION_COUNT);
 	}
+
+	_indexCount += PHOTON_EXPANSION_COUNT;
 }

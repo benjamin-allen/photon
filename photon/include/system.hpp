@@ -3,7 +3,7 @@
 
 class System {
 private:
-	std::unique_ptr<EntityManager> _target;
+	EntityManager* _target;
 	std::vector<int> _actingIndices;
 protected:
 	virtual void Act(unsigned int);

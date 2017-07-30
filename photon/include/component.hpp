@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <algorithm>
 
 class Component {
 protected:
@@ -17,7 +18,7 @@ public:
 };
 
 
-class IDComponent : protected Component {
+class IDComponent : public Component {
 protected:
 	void f();
 public:
@@ -46,9 +47,9 @@ void ComponentRegistry::Register() {
 	C object;
 
 	if(std::find(_registry.begin(), _registry.end(), object.Name()) != _registry.end()) {
-		throw std::logic_error("A Component has already been registered under the " + object._name + " identifier");
+		throw std::logic_error("A Component has already been registered under the " + object.Name() + " identifier");
 	}
-	_registry.push_back(object._name);
+	_registry.push_back(object.Name());
 	if(_registry.size() <= preRC) {
 		throw std::runtime_error("Component registration failed");
 	}
@@ -61,7 +62,7 @@ unsigned int ComponentRegistry::GetIndex() {
 	}
 
 	C object;
-	auto iterator = std::find(_registry.begin(), _registry.end(), object.Name);
+	auto iterator = std::find(_registry.begin(), _registry.end(), object.Name());
 	if(iterator == _registry.end()) {
 		throw std::invalid_argument("Could not find component");
 	}
