@@ -17,6 +17,12 @@ EntityManager::EntityManager(bool forceUniques) {
 unsigned int EntityManager::AddEntity() {
 	unsigned int cIndex = _componentRegistry.GetIndex<IDComponent>();
 	unsigned int entity;
+	if(_entityCount < components[cIndex].size()) {
+		if(!components[cIndex][_entityCount]->IsActive()) {
+			components[cIndex][_entityCount]->Activate();
+			return _entityCount++;
+		}
+	}
 	for(entity = 0; entity < _indexCount; ++entity) {
 		if(components[cIndex][entity]->IsActive() == false) {
 			++_entityCount;
