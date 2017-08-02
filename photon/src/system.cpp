@@ -17,7 +17,7 @@ void System::Run() {
 	unsigned int IDIndex = _target->GetComponentVectorIndex("idcomponent");
 
 	for(int entity = 0; attempts < targetAttempts; ++entity) {
-		bool hasAllComponents = true;
+		/*bool hasAllComponents = true;
 
 		if(!_target->components[IDIndex][entity]->IsActive()) {
 			break;
@@ -31,8 +31,8 @@ void System::Run() {
 		}
 		if(!hasAllComponents) {
 			continue;
-		}
-
+		}*/
+		attempts++;
 		Act(entity);
 	}
 }

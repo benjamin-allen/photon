@@ -3,7 +3,7 @@
 #include "component.hpp"
 #include <memory>
 
-#define PHOTON_INITIAL_ALLOCATION 100
+#define PHOTON_INITIAL_ALLOCATION 1000
 #define PHOTON_EXPANSION_COUNT PHOTON_INITIAL_ALLOCATION / 2
 
 class EntityManager {

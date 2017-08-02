@@ -2,39 +2,36 @@
 
 #include <string>
 #include <vector>
-#include <algorithm>
-#include <memory>
 
-class Component {
-protected:
-	std::string _name;
-	bool _isActive = false;
-public:
-	Component(std::string name);
-	std::string Name();
-	void Activate();
-	void Deactivate();
-	bool IsActive();
-	virtual std::unique_ptr<Component> NOST();
-};
+namespace photon {
+
+	struct Component {
+		Component(std::string);
+		std::string IDString();
+		void Activate();
+		void Deactivate();
+		bool IsActive();
+	protected:
+		std::string _identifierString;
+		bool _activityStatus = false;
+	};
 
 
-class IDComponent : public Component {
-public:
-	std::unique_ptr<Component> NOST();
-	IDComponent();
-	std::string id;
-};
+	struct IDComponent : Component {
+		IDComponent();
+		std::string id;
+	};
 
 
-class ComponentRegistry {
-private:
-	std::vector<std::string> _registry;
-	unsigned int _registryCount = 0;
-public:
-	template <class C> void Register();
-	template <class C> unsigned int GetIndex();
-	unsigned int GetIndex(std::string);
-};
+	class ComponentRegistry {
+	private:
+		std::vector<std::string> _registry;
+		unsigned int _registryCount = 0;
+	public:
+		template <class C> void Register();
+		template <class C> unsigned int GetIndex();
+	};
+
+}
 
 #include "template_component.tpp"
