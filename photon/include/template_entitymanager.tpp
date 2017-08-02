@@ -1,18 +1,45 @@
 #pragma once
 
-template <class C>
-void EntityManager::RegisterComponent() {
-	if(!std::is_base_of<Component, C>::value) {
-		throw std::invalid_argument("Class is not a component");
-	}
-	_componentRegistry.Register<C>();
+namespace photon {
 
-	std::vector<std::unique_ptr<Component>> vector;
-	vector.reserve(_indexCount);
-	for(unsigned int i = 0; i < _indexCount; ++i) {
-		std::unique_ptr<C> ptr(new C());
-		vector.push_back(std::move(ptr));
+	template <class C>
+	void EntityManager::RegisterComponent() {
+		if(!std::is_base_of<Component, C>::value) {
+			throw std::invalid_argument("Class is not a component");
+		}
+		_componentRegistry.Register<C>();
+
+		std::vector<C>* vector = new std::vector<C>;
+		vector->resize(_indexCount);
+		for(unsigned int i = 0; i < _indexCount; ++i) {
+			C c;
+			vector->at(i) = c;
+		}
+
+		std::any obj;
+		obj.emplace(vector);
+		componentCollection.push_back(obj);
 	}
 
-	components.push_back(std::move(vector));
+	template <class C>
+	void EntityManager::SetComponentActiveState(unsigned int entity, bool newState) {
+		if(!std::is_base_of<Component, C>::value) {
+			throw std::invalid_argument("Class is not a component");
+		}
+		unsigned int cIndex = _componentRegistry.GetIndex<C>();
+		if(newState == true) {
+			std::any_cast<vector<C>*>(componentCollection[cIndex])->at(entity).Activate();
+		}
+		else {
+			std::any_cast<vector<C>*>(componentCollection[cIndex])->at(entity).Deactivate();
+		}
+	}
+
+	template <class C>
+	unsigned int EntityManager::GetComponentVectorIndex() {
+		if(!std::is_base_of<Component, C>::value) {
+			throw std::invalid_argument("Class is not a component");
+		}
+		return _componentRegistry.GetIndex<C>();
+	}
 }
