@@ -23,6 +23,7 @@ namespace photon {
 		template <class C> void SetComponentActiveState(unsigned int, bool);
 		template <class C> unsigned int GetComponentVectorIndex();
 		unsigned int AddEntity();
+		void AddEntities(unsigned int);
 		unsigned int GetEntityCount();
 		void RemoveEntity(unsigned int);
 

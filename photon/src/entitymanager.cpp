@@ -16,6 +16,9 @@ namespace photon {
 		RegisterComponent<IDComponent>();
 	}
 
+	EntityManager::~EntityManager() {
+	}
+
 	unsigned int EntityManager::AddEntity() {
 		unsigned int IDIndex = _componentRegistry.GetIndex<IDComponent>();
 		unsigned int entity;
@@ -38,6 +41,17 @@ namespace photon {
 		++_entityCount;
 		idVec->at(entity).Activate();
 		return entity;
+	}
+
+	void EntityManager::AddEntities(unsigned int count) {
+		unsigned int IDIndex = _componentRegistry.GetIndex<IDComponent>();
+		unsigned int entity;
+		vector<IDComponent>* idVec = any_cast<vector<IDComponent>*>(componentCollection[IDIndex]);
+		if(count < idVec->size()) {
+			for(entity = 0; entity < count; ++entity) {
+				idVec->at(entity).Activate();
+			}
+		}
 	}
 
 	void EntityManager::RemoveEntity(unsigned int entity) {
