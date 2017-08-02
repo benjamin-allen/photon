@@ -17,7 +17,7 @@ namespace photon {
 		}
 
 		std::any obj;
-		obj.emplace(vector);
+		obj.emplace<std::vector<C>*>(vector);
 		componentCollection.push_back(obj);
 	}
 
