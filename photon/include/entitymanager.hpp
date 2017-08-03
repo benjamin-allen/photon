@@ -1,7 +1,6 @@
 #pragma once
 
 #include "component.hpp"
-#include <memory>
 #include <any>
 
 #define PHOTON_INITIAL_ALLOCATION 1000
@@ -9,16 +8,16 @@
 
 namespace photon {
 
-	class EntityManager {
+	class EntityManagerBase {
 	private:
 		unsigned int _entityCount;
 		unsigned int _indexCount;
 		ComponentRegistry _componentRegistry;
-
-		void Expand();
+	protected:
+		virtual void Expand() = 0;
 	public:
-		EntityManager();
-		~EntityManager();
+		EntityManagerBase();
+		virtual ~EntityManagerBase();
 		template <class C> void RegisterComponent();
 		template <class C> void SetComponentActiveState(unsigned int, bool);
 		template <class C> unsigned int GetComponentVectorIndex();

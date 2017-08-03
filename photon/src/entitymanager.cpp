@@ -2,24 +2,23 @@
 #include <typeinfo>
 
 using std::string;
-using std::unique_ptr;
 using std::vector;
 using std::any;
 using std::any_cast;
 
 
 namespace photon {
-	EntityManager::EntityManager() {
+	
+	EntityManagerBase::EntityManagerBase() {
 		_entityCount = 0;
 		_indexCount = PHOTON_INITIAL_ALLOCATION;
 
 		RegisterComponent<IDComponent>();
 	}
 
-	EntityManager::~EntityManager() {
-	}
+	EntityManagerBase::~EntityManagerBase() { }
 
-	unsigned int EntityManager::AddEntity() {
+	unsigned int EntityManagerBase::AddEntity() {
 		unsigned int IDIndex = _componentRegistry.GetIndex<IDComponent>();
 		unsigned int entity;
 		vector<IDComponent>* idVec= any_cast<vector<IDComponent>*>(componentCollection[IDIndex]);
@@ -43,38 +42,29 @@ namespace photon {
 		return entity;
 	}
 
-	void EntityManager::AddEntities(unsigned int count) {
+	void EntityManagerBase::AddEntities(unsigned int count) {
 		unsigned int IDIndex = _componentRegistry.GetIndex<IDComponent>();
 		unsigned int entity;
 		vector<IDComponent>* idVec = any_cast<vector<IDComponent>*>(componentCollection[IDIndex]);
 		if(count < idVec->size()) {
 			for(entity = 0; entity < count; ++entity) {
 				idVec->at(entity).Activate();
+				idVec->at(entity).id = std::to_string(entity);
 			}
 		}
 	}
 
-	void EntityManager::RemoveEntity(unsigned int entity) {
+	void EntityManagerBase::RemoveEntity(unsigned int entity) {
 		unsigned int cIndex = _componentRegistry.GetIndex<IDComponent>();
 		vector<IDComponent>* v = any_cast<vector<IDComponent>*>(componentCollection[cIndex]);
 		v->at(entity).Deactivate();
 		--_entityCount;
 	}
 
-	unsigned int EntityManager::GetEntityCount() {
+	unsigned int EntityManagerBase::GetEntityCount() {
 		return _entityCount;
 	}
 
-	void EntityManager::Expand() {
-		for(unsigned int i = 0; i < componentCollection.size(); ++i) {
-			auto v = any_cast<vector<void*>*>(componentCollection[i]);
-			v->resize(PHOTON_EXPANSION_COUNT);
-			for(unsigned int j = _indexCount; j < v->size(); ++j) {
-				v->at(j) = v->at(0);
-			}
-		}
-
-		_indexCount += PHOTON_EXPANSION_COUNT;
-	}
+	void EntityManagerBase::Expand() { }
 
 }

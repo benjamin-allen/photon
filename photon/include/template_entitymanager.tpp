@@ -3,7 +3,7 @@
 namespace photon {
 
 	template <class C>
-	void EntityManager::RegisterComponent() {
+	void EntityManagerBase::RegisterComponent() {
 		if(!std::is_base_of<Component, C>::value) {
 			throw std::invalid_argument("Class is not a component");
 		}
@@ -22,7 +22,7 @@ namespace photon {
 	}
 
 	template <class C>
-	void EntityManager::SetComponentActiveState(unsigned int entity, bool newState) {
+	void EntityManagerBase::SetComponentActiveState(unsigned int entity, bool newState) {
 		if(!std::is_base_of<Component, C>::value) {
 			throw std::invalid_argument("Class is not a component");
 		}
@@ -36,7 +36,7 @@ namespace photon {
 	}
 
 	template <class C>
-	unsigned int EntityManager::GetComponentVectorIndex() {
+	unsigned int EntityManagerBase::GetComponentVectorIndex() {
 		if(!std::is_base_of<Component, C>::value) {
 			throw std::invalid_argument("Class is not a component");
 		}

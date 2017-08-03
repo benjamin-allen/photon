@@ -5,14 +5,14 @@ namespace photon {
 
 	class System {
 	protected:
-		EntityManager* _target;
+		EntityManagerBase* _target;
 		std::vector<int> _actingIndices;
 	public:
-		System(EntityManager*);
+		System(EntityManagerBase*);
 		virtual void Run();
 		template <class C> void TargetComponent();
 		template <class C> void UntargetComponent();
-		EntityManager* Target();
+		EntityManagerBase* Target();
 	};
 
 }
