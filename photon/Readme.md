@@ -53,11 +53,10 @@ planned.
 TODO: This
 
 # License
-Photon is licensed under the MIT license. 
-
-TODO: Add a copy of the MIT license
+Photon is licensed under the [MIT License]
 
 
-[1]: https://en.wikipedia.org/wiki/Entity%E2%80%93component%E2%80%93system
-[2]: https://www.gamedev.net/articles/programming/general-and-gameplay-programming/understanding-component-entity-systems-r3013/
-[3]: http://entity-systems.wikidot.com/
+[1]: https://en.wikipedia.org/wiki/Entity%E2%80%93component%E2%80%93system "Wikipedia entry"
+[2]: https://www.gamedev.net/articles/programming/general-and-gameplay-programming/understanding-component-entity-systems-r3013/ "An article about ECS"
+[3]: http://entity-systems.wikidot.com/ "Entity Systems wiki"
+[MIT License]: ./LICENSE.md "License"
