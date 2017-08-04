@@ -131,11 +131,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
+    <Text Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\component.hpp" />
     <ClInclude Include="include\entitymanager.hpp" />
+    <ClInclude Include="include\photon.hpp" />
     <ClInclude Include="include\system.hpp" />
   </ItemGroup>
   <ItemGroup>
