@@ -1,7 +1,5 @@
 #pragma once
 
-#include "component.hpp"
-#include "entitymanager.hpp"
 #include "system.hpp"
 
 #define PHOTON_VERSION_MAJOR 0

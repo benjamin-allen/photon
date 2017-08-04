@@ -131,7 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="Readme.txt" />
+    <Text Include="Readme.md" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\component.hpp" />
