@@ -14,7 +14,9 @@ namespace photon {
 		unsigned int _indexCount;
 		ComponentRegistry _componentRegistry;
 	protected:
-		virtual void Expand() = 0;
+		virtual void Expand();
+		template <class C> void Grow();
+		template <class C> void Destroy();
 	public:
 		EntityManagerBase();
 		virtual ~EntityManagerBase();

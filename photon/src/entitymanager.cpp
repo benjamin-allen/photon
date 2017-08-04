@@ -16,7 +16,9 @@ namespace photon {
 		RegisterComponent<IDComponent>();
 	}
 
-	EntityManagerBase::~EntityManagerBase() { }
+	EntityManagerBase::~EntityManagerBase() { 
+		Destroy<IDComponent>();
+	}
 
 	unsigned int EntityManagerBase::AddEntity() {
 		unsigned int IDIndex = _componentRegistry.GetIndex<IDComponent>();
@@ -37,6 +39,7 @@ namespace photon {
 		}
 
 		Expand();
+		_indexCount += PHOTON_EXPANSION_COUNT;
 		++_entityCount;
 		idVec->at(entity).Activate();
 		return entity;
@@ -65,6 +68,7 @@ namespace photon {
 		return _entityCount;
 	}
 
-	void EntityManagerBase::Expand() { }
-
+	void EntityManagerBase::Expand() {
+		Grow<IDComponent>();
+	}
 }
