@@ -35,8 +35,8 @@ to the data stored in the Entity Manager.
     * `_activityStatus`: A boolean which controls whether the component is in use for
        a given entity 
 2. Helper functions:
-    * `Name()`: Returns the `_identifierString` of a Component. Note: there is
-      no related function to modify name
+    * `IDString()`: Returns the `_identifierString` of a Component. Note: there
+      is no related function to modify name
     * `Activate()` and `Deactivate`: Functions which change the active state of
       the component
     * `ISActive()`: Returns the activity status
@@ -55,3 +55,26 @@ to the data stored in the Entity Manager.
 2. `ComponentRegistry` is a private member of an Entity Manager
 3. `Register<Component C>()` will add a component to the registry by 
    retrieving the identifier string and adding it to the vector
+
+
+## Systems
+#### Overview
+1. Currently, systems have very little fully-defined implementation. It is 
+   intended to be derived from, similar to `Component`
+2. Eventually, the goal is to have systems facilitate checking of entity 
+   validity
+
+#### Details
+1. Metadata:
+    * `_target` is a pointer to the Entity Manager that this system will act upon
+    * `_actingIndices` is a vector of integers corresponding to the indices that
+      the system is intended to operate on
+        * This was a holdover from early prototypes of Photon and should not be
+          expected to remain in the API without major changes
+2. `Run()` is a virtual method which is provided with no code. It may be useful 
+   for polymorphic systems, if those are desired.
+3. `TargetComponent<Component C>()` and `UntargetComponent<Component C>()`
+   add or remove indices corresponding to components that the system is intended
+   to operate on
+    * Like `_actingIndices` it is a holdover from early prototypes and its
+      implementation will likely change drastically
