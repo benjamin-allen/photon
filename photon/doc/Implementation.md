@@ -78,3 +78,67 @@ to the data stored in the Entity Manager.
    to operate on
     * Like `_actingIndices` it is a holdover from early prototypes and its
       implementation will likely change drastically
+
+
+## Entity Managers
+#### Overview
+1. Again, there are no entities
+2. All usable entity managers must derive from `EntityManagerBase`, which leaves
+   a few methods to be implemented
+    * The user is intended to implement a constructor, destructor, and data 
+      expansion method. A planned update may render the first two requirements
+      obsolete
+3. Component data is stored as vectors of various components, accessible via 
+   pointers to those vectors. The pointers are stored in a vector of `any`
+   objects (you can read a bit more about C++17's `std::any` [here][1]). This
+   vector of `any` objects is called the `componentCollection`
+4. Because of the above, an "entity" can be considered as a single component
+   from each vector, all of which share the same index. See the table below for
+   an example. In Photon, an entity is only an index used to access various 
+   components within the collection
+
+| Component Collection Vectors   	| Entity "0" 	| Entity "1" 	| ...          	|
+|--------------------------------	|------------	|------------	|--------------	|
+| IDComponent vector `IDVec`     	| `IDVec[0]` 	| `IDVec[1]` 	| `IDVec[...]` 	|
+| RenderComponent vector `RCVec` 	| RCVec[0]   	| `RCVec[1]` 	| `RCVec[...]` 	|
+
+#### Details
+1. Metadata:
+    * `_entityCount`: Maintains a simple count of how many entities exist 
+      within the entity manager. Modified upon addition or removal of an entity;
+      the value is not calculated every frame. For this reason, one should use
+      `AddEntity()` and `RemoveEntity(uint entity)` to change this value
+        * Additionally, `AddEntity()` can use this value to add an entity in
+          O(1) time
+    * `_indexCount`: `EntityManagerBase` resizes its vectors, it does not
+      reserve and rely on `push_back` to add values. `_indexCount` is one 
+      greater than the highest-accessible index in the collection
+    * `_componentRegistry`: The entity manager's private component registry
+2. Helper Functions:
+    * `GetEntityCount()`: returns `_entityCount`_
+    * `GetComponentVectorIndex<Component C>()`: a function that accesses the
+      component registry and retrieves position of the collection element 
+      containing that vector
+    * `RegisterComponent<Component C>()` adds a listing the component registry,
+      creates the associated vector in heap memory, and adds a reference to the
+      collection
+3. Entity Management Functions:
+    * `AddEntity()`: Sets the first deactivated entity it can find to activated
+    * `AddEntities(uint count)`: Batch initialization of entities
+    * `RemoveEntity(uint enitty)`: Deactivate the entity at that index
+        * This does not change any other components
+    * `SetComponentActiveState<Component C>(uint, bool)`: Sets an entity's
+      component's activity status
+4. Virtual Functions:
+    * `Expand()`: called when the collection needs to allocate more space for
+      data
+    * `Grow<Component C>()`: `Expand()` should be defined in derived classes
+      and called for each component in the collection
+    * There is a virtual destructor
+    * To simplify deletion, `Destroy<Component>()` can be called, which 
+      properly deletes component data by dereferencing the pointer inside the
+      any object, and then resets the `any` object in the collection so there's
+      no dangling pointer
+
+
+[1]: http://en.cppreference.com/w/cpp/utility/any
