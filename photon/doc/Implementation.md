@@ -100,7 +100,7 @@ to the data stored in the Entity Manager.
 | Component Collection Vectors   	| Entity "0" 	| Entity "1" 	| ...          	|
 |--------------------------------	|------------	|------------	|--------------	|
 | IDComponent vector `IDVec`     	| `IDVec[0]` 	| `IDVec[1]` 	| `IDVec[...]` 	|
-| RenderComponent vector `RCVec` 	| RCVec[0]   	| `RCVec[1]` 	| `RCVec[...]` 	|
+| RenderComponent vector `RCVec` 	| `RCVec[0]`  	| `RCVec[1]` 	| `RCVec[...]` 	|
 
 #### Details
 1. Metadata:
