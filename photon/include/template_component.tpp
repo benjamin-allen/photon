@@ -27,7 +27,7 @@
 namespace photon {
 
 	template <class C>
-	void ComponentRegistry::Register() {
+	void ComponentRegistry::registerComponent() {
 		if(!std::is_base_of<Component, C>::value) {
 			throw std::invalid_argument("Class is not a component");
 		}
@@ -35,10 +35,10 @@ namespace photon {
 		unsigned int preRC = _registryCount;
 		C component;
 
-		if(std::find(_registry.begin(), _registry.end(), component.IDString()) != _registry.end()) {
-			throw std::logic_error("A Component has already been registered under the " + component.IDString() + " identifier");
+		if(std::find(_registry.begin(), _registry.end(), component.idString()) != _registry.end()) {
+			throw std::logic_error("A Component has already been registered under the " + component.idString() + " identifier");
 		}
-		_registry.push_back(component.IDString());
+		_registry.push_back(component.idString());
 		_registryCount = _registry.size();
 		if(_registryCount <= preRC) {
 			throw std::runtime_error("Component registration failed");
@@ -46,13 +46,13 @@ namespace photon {
 	}
 
 	template <class C>
-	unsigned int ComponentRegistry::GetIndex() {
+	unsigned int ComponentRegistry::getIndex() {
 		if(!std::is_base_of<Component, C>::value) {
 			throw std::invalid_argument("Class is not a component");
 		}
 
 		C component;
-		auto iterator = std::find(_registry.begin(), _registry.end(), component.IDString());
+		auto iterator = std::find(_registry.begin(), _registry.end(), component.idString());
 		if(iterator == _registry.end()) {
 			throw std::invalid_argument("Could not find component");
 		}

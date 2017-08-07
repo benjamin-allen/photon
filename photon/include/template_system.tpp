@@ -27,24 +27,24 @@
 namespace photon {
 
 	template <class C>
-	void System::TargetComponent() {
+	void System::targetComponent() {
 		if(!std::is_base_of<Component, C>::value) {
 			throw std::invalid_argument("Class is not a component");
 		}
 		C object;
-		int index = _target->GetComponentVectorIndex(object.IDString());
+		int index = _target->getComponentVectorIndex(object.idString());
 
 		_actingIndices.push_back(index);
 		std::sort(_actingIndices.begin(), _actingIndices.end());
 	}
 
 	template <class C>
-	void System::UntargetComponent() {
+	void System::untargetComponent() {
 		if(!std::is_base_of<Component, C>::value) {
 			throw std::invalid_argument("Class is not a component");
 		}
 		C object;
-		int index = _target->GetComponentVectorIndex(object.IDString());
+		int index = _target->getComponentVectorIndex(object.idString());
 
 		for(int i = 0; i < _actingIndices.size(); ++i) {
 			if(_actingIndices[i] == index) {

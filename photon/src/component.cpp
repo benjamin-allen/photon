@@ -32,19 +32,19 @@ namespace photon {
 		_identifierString = name;
 	}
 
-	string Component::IDString() {
+	string Component::idString() {
 		return _identifierString;
 	}
 
-	void Component::Activate() {
+	void Component::activate() {
 		_activityStatus = true;
 	}
 
-	void Component::Deactivate() {
+	void Component::deactivate() {
 		_activityStatus = false;
 	}
 
-	bool Component::IsActive() {
+	bool Component::isActive() {
 		return _activityStatus;
 	}
 

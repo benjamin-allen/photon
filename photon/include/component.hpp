@@ -31,10 +31,10 @@ namespace photon {
 
 	struct Component {
 		Component(std::string);
-		std::string IDString();
-		void Activate();
-		void Deactivate();
-		bool IsActive();
+		std::string idString();
+		void activate();
+		void deactivate();
+		bool isActive();
 	protected:
 		std::string _identifierString;
 		bool _activityStatus = false;
@@ -52,8 +52,8 @@ namespace photon {
 		std::vector<std::string> _registry;
 		unsigned int _registryCount = 0;
 	public:
-		template <class C> void Register();
-		template <class C> unsigned int GetIndex();
+		template <class C> void registerComponent();
+		template <class C> unsigned int getIndex();
 	};
 
 }

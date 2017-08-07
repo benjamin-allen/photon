@@ -33,9 +33,9 @@ namespace photon {
 		}
 	}
 
-	EntityManagerBase* System::Target() {
+	EntityManagerBase* System::target() {
 		return _target;
 	}
 
-	void System::Run() { }
+	void System::run() { }
 }

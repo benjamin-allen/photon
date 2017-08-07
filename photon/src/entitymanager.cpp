@@ -37,62 +37,62 @@ namespace photon {
 		_entityCount = 0;
 		_indexCount = PHOTON_INITIAL_ALLOCATION;
 
-		RegisterComponent<IDComponent>();
+		registerComponent<IDComponent>();
 	}
 
 	EntityManagerBase::~EntityManagerBase() { 
-		Destroy<IDComponent>();
+		destroy<IDComponent>();
 	}
 
-	unsigned int EntityManagerBase::AddEntity() {
-		unsigned int IDIndex = _componentRegistry.GetIndex<IDComponent>();
+	unsigned int EntityManagerBase::addEntity() {
+		unsigned int IDIndex = _componentRegistry.getIndex<IDComponent>();
 		unsigned int entity;
 		vector<IDComponent>* idVec= any_cast<vector<IDComponent>*>(componentCollection[IDIndex]);
 		if(_entityCount < idVec->size()) {
-			if(!idVec->at(_entityCount).IsActive()) {
-				idVec->at(_entityCount).Activate();
+			if(!idVec->at(_entityCount).isActive()) {
+				idVec->at(_entityCount).activate();
 				return _entityCount++;
 			}
 		}
 		for(entity = 0; entity < _indexCount; ++entity) {
-			if(!idVec->at(entity).IsActive()) {
+			if(!idVec->at(entity).isActive()) {
 				++_entityCount;
-				idVec->at(entity).Activate();
+				idVec->at(entity).activate();
 				return entity;
 			}
 		}
 
-		Expand();
+		expand();
 		_indexCount += PHOTON_EXPANSION_COUNT;
 		++_entityCount;
-		idVec->at(entity).Activate();
+		idVec->at(entity).activate();
 		return entity;
 	}
 
-	void EntityManagerBase::AddEntities(unsigned int count) {
-		unsigned int IDIndex = _componentRegistry.GetIndex<IDComponent>();
+	void EntityManagerBase::addEntities(unsigned int count) {
+		unsigned int IDIndex = _componentRegistry.getIndex<IDComponent>();
 		unsigned int entity;
 		vector<IDComponent>* idVec = any_cast<vector<IDComponent>*>(componentCollection[IDIndex]);
 		if(count < idVec->size()) {
 			for(entity = 0; entity < count; ++entity) {
-				idVec->at(entity).Activate();
+				idVec->at(entity).activate();
 				idVec->at(entity).id = std::to_string(entity);
 			}
 		}
 	}
 
-	void EntityManagerBase::RemoveEntity(unsigned int entity) {
-		unsigned int cIndex = _componentRegistry.GetIndex<IDComponent>();
+	void EntityManagerBase::removeEntity(unsigned int entity) {
+		unsigned int cIndex = _componentRegistry.getIndex<IDComponent>();
 		vector<IDComponent>* v = any_cast<vector<IDComponent>*>(componentCollection[cIndex]);
-		v->at(entity).Deactivate();
+		v->at(entity).deactivate();
 		--_entityCount;
 	}
 
-	unsigned int EntityManagerBase::GetEntityCount() {
+	unsigned int EntityManagerBase::getEntityCount() {
 		return _entityCount;
 	}
 
-	void EntityManagerBase::Expand() {
-		Grow<IDComponent>();
+	void EntityManagerBase::expand() {
+		grow<IDComponent>();
 	}
 }

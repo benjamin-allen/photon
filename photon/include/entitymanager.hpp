@@ -38,19 +38,19 @@ namespace photon {
 		unsigned int _indexCount;
 		ComponentRegistry _componentRegistry;
 	protected:
-		virtual void Expand();
-		template <class C> void Grow();
-		template <class C> void Destroy();
+		virtual void expand();
+		template <class C> void grow();
+		template <class C> void destroy();
 	public:
 		EntityManagerBase();
 		virtual ~EntityManagerBase();
-		template <class C> void RegisterComponent();
-		template <class C> void SetComponentActiveState(unsigned int, bool);
-		template <class C> unsigned int GetComponentVectorIndex();
-		unsigned int AddEntity();
-		void AddEntities(unsigned int);
-		unsigned int GetEntityCount();
-		void RemoveEntity(unsigned int);
+		template <class C> void registerComponent();
+		template <class C> void setComponentActiveState(unsigned int, bool);
+		template <class C> unsigned int getComponentVectorIndex();
+		unsigned int addEntity();
+		void addEntities(unsigned int);
+		unsigned int getEntityCount();
+		void removeEntity(unsigned int);
 
 		std::vector<std::any> componentCollection;
 	};

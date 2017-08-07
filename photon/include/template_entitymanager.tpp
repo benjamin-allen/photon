@@ -27,11 +27,11 @@
 namespace photon {
 
 	template <class C>
-	void EntityManagerBase::RegisterComponent() {
+	void EntityManagerBase::registerComponent() {
 		if(!std::is_base_of<Component, C>::value) {
 			throw std::invalid_argument("Class is not a component");
 		}
-		_componentRegistry.Register<C>();
+		_componentRegistry.registerComponent<C>();
 
 		std::vector<C>* vector = new std::vector<C>;
 		vector->resize(_indexCount);
@@ -46,43 +46,43 @@ namespace photon {
 	}
 
 	template <class C>
-	void EntityManagerBase::SetComponentActiveState(unsigned int entity, bool newState) {
+	void EntityManagerBase::setComponentActiveState(unsigned int entity, bool newState) {
 		if(!std::is_base_of<Component, C>::value) {
 			throw std::invalid_argument("Class is not a component");
 		}
-		unsigned int cIndex = _componentRegistry.GetIndex<C>();
+		unsigned int cIndex = _componentRegistry.getIndex<C>();
 		if(newState == true) {
-			std::any_cast<vector<C>*>(componentCollection[cIndex])->at(entity).Activate();
+			std::any_cast<vector<C>*>(componentCollection[cIndex])->at(entity).activate();
 		}
 		else {
-			std::any_cast<vector<C>*>(componentCollection[cIndex])->at(entity).Deactivate();
+			std::any_cast<vector<C>*>(componentCollection[cIndex])->at(entity).deactivate();
 		}
 	}
 
 	template <class C>
-	unsigned int EntityManagerBase::GetComponentVectorIndex() {
+	unsigned int EntityManagerBase::getComponentVectorIndex() {
 		if(!std::is_base_of<Component, C>::value) {
 			throw std::invalid_argument("Class is not a component");
 		}
-		return _componentRegistry.GetIndex<C>();
+		return _componentRegistry.getIndex<C>();
 	}
 
 	template <class C>
-	void EntityManagerBase::Grow() {
+	void EntityManagerBase::grow() {
 		if(!std::is_base_of<Component, C>::value) {
 			throw std::invalid_argument("Class is not a component");
 		}
-		unsigned int cIndex = _componentRegistry.GetIndex<C>();
+		unsigned int cIndex = _componentRegistry.getIndex<C>();
 		std::vector<C>* cVec = std::any_cast<std::vector<C>*>(componentCollection[cIndex]);
 		cVec->resize(cVec->size() + PHOTON_EXPANSION_COUNT);
 	}
 
 	template <class C>
-	void EntityManagerBase::Destroy() {
+	void EntityManagerBase::destroy() {
 		if(!std::is_base_of<Component, C>::value) {
 			throw std::invalid_argument("Class is not a component");
 		}
-		unsigned int cIndex = _componentRegistry.GetIndex<C>();
+		unsigned int cIndex = _componentRegistry.getIndex<C>();
 		std::vector<C>* cVec = std::any_cast<std::vector<C>*>(componentCollection[cIndex]);
 		delete cVec;
 		componentCollection[cIndex].reset();

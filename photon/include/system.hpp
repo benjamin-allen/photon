@@ -33,10 +33,10 @@ namespace photon {
 		std::vector<int> _actingIndices;
 	public:
 		System(EntityManagerBase*);
-		virtual void Run();
-		template <class C> void TargetComponent();
-		template <class C> void UntargetComponent();
-		EntityManagerBase* Target();
+		virtual void run();
+		template <class C> void targetComponent();
+		template <class C> void untargetComponent();
+		EntityManagerBase* target();
 	};
 
 }
