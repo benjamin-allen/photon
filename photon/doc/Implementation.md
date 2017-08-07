@@ -35,11 +35,11 @@ to the data stored in the Entity Manager.
     * `_activityStatus`: A boolean which controls whether the component is in use for
        a given entity 
 2. Helper functions:
-    * `IDString()`: Returns the `_identifierString` of a Component. Note: there
+    * `idString()`: Returns the `_identifierString` of a Component. Note: there
       is no related function to modify name
-    * `Activate()` and `Deactivate`: Functions which change the active state of
+    * `activate()` and `deactivate`: Functions which change the active state of
       the component
-    * `ISActive()`: Returns the activity status
+    * `isActive()`: Returns the activity status
 
 
 ## The Component Registry
@@ -53,7 +53,7 @@ to the data stored in the Entity Manager.
    `_identifierString` of various components. A string's index in the vector
    corresponds to the index of the collection of components in an Entity Manager
 2. `ComponentRegistry` is a private member of an Entity Manager
-3. `Register<Component C>()` will add a component to the registry by 
+3. `registerComponent<Component C>()` will add a component to the registry by 
    retrieving the identifier string and adding it to the vector
 
 
@@ -71,9 +71,9 @@ to the data stored in the Entity Manager.
       the system is intended to operate on
         * This was a holdover from early prototypes of Photon and should not be
           expected to remain in the API without major changes
-2. `Run()` is a virtual method which is provided with no code. It may be useful 
+2. `run()` is a virtual method which is provided with no code. It may be useful 
    for polymorphic systems, if those are desired.
-3. `TargetComponent<Component C>()` and `UntargetComponent<Component C>()`
+3. `targetComponent<Component C>()` and `untargetComponent<Component C>()`
    add or remove indices corresponding to components that the system is intended
    to operate on
     * Like `_actingIndices` it is a holdover from early prototypes and its
@@ -107,35 +107,35 @@ to the data stored in the Entity Manager.
     * `_entityCount`: Maintains a simple count of how many entities exist 
       within the entity manager. Modified upon addition or removal of an entity;
       the value is not calculated every frame. For this reason, one should use
-      `AddEntity()` and `RemoveEntity(uint entity)` to change this value
-        * Additionally, `AddEntity()` can use this value to add an entity in
+      `addEntity()` and `removeEntity(uint entity)` to change this value
+        * Additionally, `addEntity()` can use this value to add an entity in
           O(1) time
     * `_indexCount`: `EntityManagerBase` resizes its vectors, it does not
       reserve and rely on `push_back` to add values. `_indexCount` is one 
       greater than the highest-accessible index in the collection
     * `_componentRegistry`: The entity manager's private component registry
 2. Helper Functions:
-    * `GetEntityCount()`: returns `_entityCount`_
-    * `GetComponentVectorIndex<Component C>()`: a function that accesses the
+    * `getEntityCount()`: returns `_entityCount`_
+    * `getComponentVectorIndex<Component C>()`: a function that accesses the
       component registry and retrieves position of the collection element 
       containing that vector
-    * `RegisterComponent<Component C>()` adds a listing the component registry,
+    * `registerComponent<Component C>()` adds a listing the component registry,
       creates the associated vector in heap memory, and adds a reference to the
       collection
 3. Entity Management Functions:
-    * `AddEntity()`: Sets the first deactivated entity it can find to activated
-    * `AddEntities(uint count)`: Batch initialization of entities
-    * `RemoveEntity(uint enitty)`: Deactivate the entity at that index
+    * `addEntity()`: Sets the first deactivated entity it can find to activated
+    * `addEntities(uint count)`: Batch initialization of entities
+    * `removeEntity(uint enitty)`: Deactivate the entity at that index
         * This does not change any other components
-    * `SetComponentActiveState<Component C>(uint, bool)`: Sets an entity's
+    * `setComponentActiveState<Component C>(uint, bool)`: Sets an entity's
       component's activity status
 4. Virtual Functions:
-    * `Expand()`: called when the collection needs to allocate more space for
+    * `expand()`: called when the collection needs to allocate more space for
       data
-    * `Grow<Component C>()`: `Expand()` should be defined in derived classes
+    * `grow<Component C>()`: `Expand()` should be defined in derived classes
       and called for each component in the collection
     * There is a virtual destructor
-    * To simplify deletion, `Destroy<Component>()` can be called, which 
+    * To simplify deletion, `destroy<Component>()` can be called, which 
       properly deletes component data by dereferencing the pointer inside the
       any object, and then resets the `any` object in the collection so there's
       no dangling pointer

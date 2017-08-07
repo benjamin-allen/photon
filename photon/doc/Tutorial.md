@@ -48,14 +48,14 @@ and expansion. So let's define an EntityManager that also has our
 class AnotherEntityManager : public EntityManagerBase {
 public:
     AnotherEntityManager() : EntityManagerBase() {
-        RegisterComponent<PositionComponent>();
+        registerComponent<PositionComponent>();
     }
     ~AnotherEntityManager() {
-        Destroy<PositionComponent>();
+        destroy<PositionComponent>();
     }
     void Expand() {
-        EntityManagerBase::Expand();
-        Grow<PositionComponent>();
+        EntityManagerBase::expand();
+        grow<PositionComponent>();
     }
 };
 ```
@@ -73,9 +73,9 @@ changes it to "foo."
 ```
 AnotherEntityManager aem;
 
-unsigned int entity1 = aem.AddEntity();
+unsigned int entity1 = aem.addEntity();
 
-unsigned int i = aem.GetComponentVectorIndex<IDComponent>();
+unsigned int i = aem.getComponentVectorIndex<IDComponent>();
 vector<IDComponent>* idVec = any_cast<vector<IDComponent>*>(aem.componentCollection[i]);
 
 idVec->at(entity1).id = "foo";
@@ -91,10 +91,10 @@ deal with reassignment since we're dealing with pointers.
 Following the code snippet before...
 
 ```
-aem.SetComponentActiveState<PositionComponent>(entity1, true);
+aem.setComponentActiveState<PositionComponent>(entity1, true);
 // Do stuff with PositionComponent...
 // ...
-aem.RemoveEntity(entity1);
+aem.removeEntity(entity1);
 ``` 
 
 The `PositionComponent` object is activated and can now be considered as part of
@@ -109,13 +109,13 @@ ID strings is below.
 ```
 class IDHashingSystem : public photon::System {
 public:
-	IDHashingSystem(EntityManager* e) : photon::System(e) { };
+	IDHashingSystem(AnotherEntityManager* e) : photon::System(e) { };
 
-	void Run() {
-		unsigned int cIndex = Target()->GetComponentVectorIndex<photon::IDComponent>();
-		std::vector<photon::IDComponent>* idVec = std::any_cast<std::vector<photon::IDComponent>*>(Target()->componentCollection[cIndex]);
+	void run() {
+		unsigned int cIndex = target()->getComponentVectorIndex<photon::IDComponent>();
+		std::vector<photon::IDComponent>* idVec = std::any_cast<std::vector<photon::IDComponent>*>(target()->componentCollection[cIndex]);
 		for(int i = 0; i < idVec->size(); ++i) {
-			if(idVec->at(i).IsActive()) {
+			if(idVec->at(i).isActive()) {
 				idVec->at(i).id = std::hash<std::string>{}(idVec->at(i).id);
 			}
 		}
@@ -133,7 +133,7 @@ implemented previously.
 
 ```
 IDHashingSystem idhs(&aem);
-idhs.Run();
+idhs.run();
 ```
 
 ## Note
