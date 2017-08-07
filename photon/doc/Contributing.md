@@ -2,8 +2,8 @@
 Hey, thanks for your interest in contributing to Photon! If you want to get up
 to speed on the innner workings of the library, [Implementation.md] is a good
 place to start. Beyond that, the source code is your next best bet to understand
-how this library works. Be aware that Photon is licensed under the [MIT License]
-and
+how this library works. Also, remember that Photon is licensed under the
+[MIT License].
 
 Once you've written a contribution, submit it with a PR with a description of
 what changes were made
@@ -36,3 +36,4 @@ but consistency is.
 
 
 [Implementation.md]: ./Implementation.md
+[MIT License]: ../LICENSE.md
