@@ -26,6 +26,8 @@
 
 namespace photon {
 
+	/// Throws an exception if the class parameter is not a derivative of
+	/// Component.
 	template <class C>
 	void System::targetComponent() {
 		if(!std::is_base_of<Component, C>::value) {
@@ -35,9 +37,11 @@ namespace photon {
 		int index = _target->getComponentVectorIndex(object.idString());
 
 		_actingIndices.push_back(index);
-		std::sort(_actingIndices.begin(), _actingIndices.end());
+		std::sort(_actingIndices.begin(), _actingIndices.end()); // Is this sort needed?
 	}
 
+	/// Throws an exception if the class parameter is not a derivative of
+	/// Component.
 	template <class C>
 	void System::untargetComponent() {
 		if(!std::is_base_of<Component, C>::value) {

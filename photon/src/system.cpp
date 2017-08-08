@@ -26,6 +26,7 @@
 
 namespace photon {
 
+	/// Throws an exception if target is null.
 	System::System(EntityManagerBase* target) {
 		_target = target;
 		if(!_target) {
@@ -36,6 +37,4 @@ namespace photon {
 	EntityManagerBase* System::target() {
 		return _target;
 	}
-
-	void System::run() { }
 }

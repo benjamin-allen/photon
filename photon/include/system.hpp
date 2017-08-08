@@ -27,15 +27,42 @@
 
 namespace photon {
 
+	/// \brief Provides a base on which to construct systems.
+	///
+	/// Systems perform logic on entities and their components. Photon's
+	/// implementation of systems is currently barebones and WIP. Ssytems target
+	/// an entity manager via a pointer and use that pointer to access its data.
 	class System {
 	protected:
+
+		/// \brief The entity manager associated with this system.
 		EntityManagerBase* _target;
+
+		/// \brief Indices of vectors to be checked for availability
+		/// \remarks Its use is not required or enforced by any code.
+		/// \warning This feature is in flux and is likely to change drastically
+		/// as Photon develops.
 		std::vector<int> _actingIndices;
+
 	public:
-		System(EntityManagerBase*);
-		virtual void run();
+
+		/// \brief Constructs a system object.
+		/// \param target Pointer to the desired target entity manager
+		System(EntityManagerBase* target);
+
+		/// \brief Virtual space to write system logic in.
+		/// \warning This is an abstract function.
+		virtual void run() = 0;
+
+		/// \brief Adds a component's index to the acting indices.
+		/// \tparam C The component to be added
 		template <class C> void targetComponent();
+
+		/// \brief Removes a component's index from the acting indices.
+		/// \tparam C The component to be removed
 		template <class C> void untargetComponent();
+
+		/// \return The system's target entity manager.
 		EntityManagerBase* target();
 	};
 
