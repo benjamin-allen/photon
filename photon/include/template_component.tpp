@@ -26,6 +26,12 @@
 
 namespace photon {
 
+	/// Appends the identifier string of the component to the registry vector.
+	/// Throws an exception if:
+	/// \li The class parameter is not a derivative of Component
+	/// \li The identifier string of the derivative component is not already
+	///     registered
+	/// \li The \c push_back operation fails
 	template <class C>
 	void ComponentRegistry::registerComponent() {
 		if(!std::is_base_of<Component, C>::value) {
@@ -45,6 +51,11 @@ namespace photon {
 		}
 	}
 
+	/// Uses std::find to search the vector for an identifier string and returns
+	/// its index.
+	/// Throws an exception if:
+	/// \li The class parameter is not a derivative of Component
+	/// \li The identifier string could not be found within the registry
 	template <class C>
 	unsigned int ComponentRegistry::getIndex() {
 		if(!std::is_base_of<Component, C>::value) {

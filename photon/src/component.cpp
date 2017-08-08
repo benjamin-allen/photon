@@ -28,6 +28,10 @@ using std::string;
 
 namespace photon {
 
+	/// This method should be used by derived classes' initialization list
+	/// to define derived components whose identifier strings all match. 
+	/// Every component is inactive when constructed and must be activated
+	/// manually.
 	Component::Component(string name) {
 		_identifierString = name;
 	}
@@ -47,7 +51,8 @@ namespace photon {
 	bool Component::isActive() {
 		return _activityStatus;
 	}
-
+	
+	/// \code IDComponent::IDComponent() : Component("idcomponent") { } \endcode
 	IDComponent::IDComponent() : Component("idcomponent") { }
 
 }
