@@ -64,12 +64,20 @@ namespace photon {
 		unsigned int entity; // Used in a loop below. It's out here in case expansion is necessary.
 		vector<IDComponent>* idVec= any_cast<vector<IDComponent>*>(componentCollection[IDIndex]);
 
-		// First attempts to add an entity at _entityCount
-		if(_entityCount < idVec->size()) {
-			if(!idVec->at(_entityCount).isActive()) {
-				idVec->at(_entityCount).activate();
-				return _entityCount++; // post increment is correct here since the index of the new entity is desired
-			}
+		// Expand if we know there's no room left
+		if(_entityCount == _indexCount) {
+			expand();
+			entity = _indexCount;
+			_indexCount += PHOTON_EXPANSION_COUNT;
+			++_entityCount;
+			idVec->at(entity).activate();
+			return entity;
+		}
+
+		// Try to add an entity at the next logical index (possible O(1) performance)
+		if(!idVec->at(_entityCount).isActive()) {
+			idVec->at(_entityCount).activate();
+			return _entityCount++; // post increment is correct here since the index of the new entity is desired
 		}
 
 		// If that fails, fallback to scanning for a deactivated entity
@@ -80,14 +88,6 @@ namespace photon {
 				return entity;
 			}
 		}
-
-		// If we don't have any free space, time to expand the collection and add an entity at the first new spot
-		// Maybe we can jump straight to this check if _entityCount and _indexCount converge.
-		expand();
-		_indexCount += PHOTON_EXPANSION_COUNT;
-		++_entityCount;
-		idVec->at(entity).activate();
-		return entity;
 	}
 
 	/// \warning This function is buggy and shouldn't be used yet. It was not a
