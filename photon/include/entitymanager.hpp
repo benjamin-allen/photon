@@ -119,4 +119,4 @@ namespace photon {
 
 }
 
-#include "template_entitymanager.tpp"
+#include "template_entitymanager.ipp"

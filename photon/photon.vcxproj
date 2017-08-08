@@ -151,9 +151,9 @@
     <None Include="doc\Implementation.md" />
     <None Include="doc\Todo.md" />
     <None Include="doc\Tutorial.md" />
-    <None Include="include\template_component.tpp" />
-    <None Include="include\template_entitymanager.tpp" />
-    <None Include="include\template_system.tpp" />
+    <None Include="include\template_component.ipp" />
+    <None Include="include\template_entitymanager.ipp" />
+    <None Include="include\template_system.ipp" />
     <None Include="LICENSE.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

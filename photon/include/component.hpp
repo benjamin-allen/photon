@@ -87,7 +87,7 @@ namespace photon {
 	/// reason to use one as a standalone registry.
 	///
 	/// \see Component
-	/// \see EntityManager
+	/// \see EntityManagerBase
 	class ComponentRegistry {
 	private:
 
@@ -113,4 +113,4 @@ namespace photon {
 
 }
 
-#include "template_component.tpp"
+#include "template_component.ipp"

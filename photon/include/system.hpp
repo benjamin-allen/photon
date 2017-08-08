@@ -68,4 +68,4 @@ namespace photon {
 
 }
 
-#include "template_system.tpp"
+#include "template_system.ipp"

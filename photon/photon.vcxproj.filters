@@ -43,13 +43,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="include\template_component.tpp" />
-    <None Include="include\template_entitymanager.tpp" />
-    <None Include="include\template_system.tpp" />
     <None Include="doc\Contributing.md" />
     <None Include="doc\Tutorial.md" />
     <None Include="doc\Implementation.md" />
     <None Include="doc\Todo.md" />
     <None Include="LICENSE.md" />
+    <None Include="include\template_component.ipp" />
+    <None Include="include\template_entitymanager.ipp" />
+    <None Include="include\template_system.ipp" />
   </ItemGroup>
 </Project>
