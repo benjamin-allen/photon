@@ -49,11 +49,14 @@ planned.
    `#include "photon.hpp"` and you're off.
 
 
-# [Tutorial]
+# Resources
+### [Tutorial]
 
+### [Contributing]
 
-# Contributing
-TODO: This
+### [Implementation Help]
+There is also a Doxygen file available. Simply go over to `doc` and run
+`doxygen doxyfile` to generate HTML docs.
 
 # License
 Photon is licensed under the [MIT License]
@@ -64,3 +67,5 @@ Photon is licensed under the [MIT License]
 [3]: http://entity-systems.wikidot.com/ "Entity Systems wiki"
 [MIT License]: ./LICENSE.md "License"
 [Tutorial]: ./doc/Tutorial.md "Tutorial"
+[Contributing]: ./doc/Contributing.md "Contributing"
+[Implementation Help]: ./doc/Implementation.md "Implementation"
