@@ -26,6 +26,13 @@
 
 namespace photon {
 
+	/// Adds a component to the component registry and then expands the
+	/// component collection with a pointer to a new vector. That vector is
+	/// expanded to match the size of the rest of the collection and filled
+	/// with \c C objects. It is then emplaced into the collection.
+	///
+	/// Throws an exception if the class parameter is not a derivative of
+	/// Component.
 	template <class C>
 	void EntityManagerBase::registerComponent() {
 		if(!std::is_base_of<Component, C>::value) {
@@ -33,6 +40,7 @@ namespace photon {
 		}
 		_componentRegistry.registerComponent<C>();
 
+		// See if this block can be simplified with one of vector's constructors
 		std::vector<C>* vector = new std::vector<C>;
 		vector->resize(_indexCount);
 		for(unsigned int i = 0; i < _indexCount; ++i) {
@@ -45,12 +53,20 @@ namespace photon {
 		componentCollection.push_back(obj);
 	}
 
+	/// Throws an exception if the class parameter is not a derivative of
+	/// Component.
+	///
+	/// \warning Users are discouraged from using this function to activate
+	/// or deactivate an entity's IDComponent, since it will not touch the 
+	/// private variables associated with those functions.
 	template <class C>
 	void EntityManagerBase::setComponentActiveState(unsigned int entity, bool newState) {
 		if(!std::is_base_of<Component, C>::value) {
 			throw std::invalid_argument("Class is not a component");
 		}
 		unsigned int cIndex = _componentRegistry.getIndex<C>();
+
+		// Maybe make this touch _entityCount if necessary?
 		if(newState == true) {
 			std::any_cast<vector<C>*>(componentCollection[cIndex])->at(entity).activate();
 		}
@@ -59,6 +75,9 @@ namespace photon {
 		}
 	}
 
+	/// Throws an exception if the class parameter is not a derivative of
+	/// Component. Also makes calls to another function that can throw
+	/// other exceptions if the class parameter is not registered.
 	template <class C>
 	unsigned int EntityManagerBase::getComponentVectorIndex() {
 		if(!std::is_base_of<Component, C>::value) {
@@ -67,6 +86,11 @@ namespace photon {
 		return _componentRegistry.getIndex<C>();
 	}
 
+	/// Throws an exception if the class parameter is not a derivative of
+	/// Component.
+	///
+	/// \warning This expands by a set amount, so each class should be called
+	/// as many times as the others or the collection will desynchronize.
 	template <class C>
 	void EntityManagerBase::grow() {
 		if(!std::is_base_of<Component, C>::value) {
@@ -74,9 +98,16 @@ namespace photon {
 		}
 		unsigned int cIndex = _componentRegistry.getIndex<C>();
 		std::vector<C>* cVec = std::any_cast<std::vector<C>*>(componentCollection[cIndex]);
-		cVec->resize(cVec->size() + PHOTON_EXPANSION_COUNT);
+		cVec->resize(cVec->size() + PHOTON_EXPANSION_COUNT); // Note this is not just PHOTON_EXPANSION_COUNT
 	}
 
+	/// Throws an exception if the class parameter is not a derivative of
+	/// Component. Will call other functions that throw execptions if used
+	/// improperly.
+	///
+	/// \warning Like \c grow() , this should be called only once per component
+	/// during destruction. The \c std::any objects are reset and their pointers
+	/// are removed, so attempting to cast them will cause a bad cast exception.
 	template <class C>
 	void EntityManagerBase::destroy() {
 		if(!std::is_base_of<Component, C>::value) {
@@ -85,7 +116,7 @@ namespace photon {
 		unsigned int cIndex = _componentRegistry.getIndex<C>();
 		std::vector<C>* cVec = std::any_cast<std::vector<C>*>(componentCollection[cIndex]);
 		delete cVec;
-		componentCollection[cIndex].reset();
+		componentCollection[cIndex].reset(); // don't forget to toss the pointer
 	}
 
 }

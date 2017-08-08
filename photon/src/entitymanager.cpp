@@ -33,6 +33,11 @@ using std::any_cast;
 
 namespace photon {
 	
+	/// Derived entity managers should have this constructor in their
+	/// initialization list.
+	///
+	/// \remark This handles the registration of IDComponent, which is the only
+	/// component that EntityManagerBase assumes to exist in its system.
 	EntityManagerBase::EntityManagerBase() {
 		_entityCount = 0;
 		_indexCount = PHOTON_INITIAL_ALLOCATION;
@@ -40,28 +45,44 @@ namespace photon {
 		registerComponent<IDComponent>();
 	}
 
+	/// Derived entity managers should call destroy on components registered
+	/// within their constructor.
+	///
+	/// \warning This is a virtual destructor and will be invoked by derived
+	/// classes.
+	///
+	/// \remark This handles the destruction of IDComponent.
 	EntityManagerBase::~EntityManagerBase() { 
 		destroy<IDComponent>();
 	}
 
+	/// If a few things line up right, this function can add an entity in O(1)
+	/// time. If not, performance becomes O(n), and the worst-case performance
+	/// is O(n) plus the time required to expand every managed component.
 	unsigned int EntityManagerBase::addEntity() {
 		unsigned int IDIndex = _componentRegistry.getIndex<IDComponent>();
-		unsigned int entity;
+		unsigned int entity; // Used in a loop below. It's out here in case expansion is necessary.
 		vector<IDComponent>* idVec= any_cast<vector<IDComponent>*>(componentCollection[IDIndex]);
+
+		// First attempts to add an entity at _entityCount
 		if(_entityCount < idVec->size()) {
 			if(!idVec->at(_entityCount).isActive()) {
 				idVec->at(_entityCount).activate();
-				return _entityCount++;
+				return _entityCount++; // post increment is correct here since the index of the new entity is desired
 			}
 		}
+
+		// If that fails, fallback to scanning for a deactivated entity
 		for(entity = 0; entity < _indexCount; ++entity) {
 			if(!idVec->at(entity).isActive()) {
-				++_entityCount;
+				++_entityCount; // pre increment is fine here since this isn't getting returned
 				idVec->at(entity).activate();
 				return entity;
 			}
 		}
 
+		// If we don't have any free space, time to expand the collection and add an entity at the first new spot
+		// Maybe we can jump straight to this check if _entityCount and _indexCount converge.
 		expand();
 		_indexCount += PHOTON_EXPANSION_COUNT;
 		++_entityCount;
@@ -69,10 +90,16 @@ namespace photon {
 		return entity;
 	}
 
+	/// \warning This function is buggy and shouldn't be used yet. It was not a
+	/// part of the design goals for 0.1.0 and was hastily added to test an
+	/// idea. Use this with extreme caution: it has undefined behaviour at
+	/// high values of count and will indiscriminately overwrite other 
+	/// components.
 	void EntityManagerBase::addEntities(unsigned int count) {
 		unsigned int IDIndex = _componentRegistry.getIndex<IDComponent>();
 		unsigned int entity;
 		vector<IDComponent>* idVec = any_cast<vector<IDComponent>*>(componentCollection[IDIndex]);
+		// So very bad
 		if(count < idVec->size()) {
 			for(entity = 0; entity < count; ++entity) {
 				idVec->at(entity).activate();
@@ -81,6 +108,8 @@ namespace photon {
 		}
 	}
 
+	/// \warning This function does not touch the non-IDComponent data of an
+	/// entity. It doesn't even deactivate the components.
 	void EntityManagerBase::removeEntity(unsigned int entity) {
 		unsigned int cIndex = _componentRegistry.getIndex<IDComponent>();
 		vector<IDComponent>* v = any_cast<vector<IDComponent>*>(componentCollection[cIndex]);
@@ -92,6 +121,10 @@ namespace photon {
 		return _entityCount;
 	}
 
+	/// \remark This handles the expansion of IDComponent
+	/// \remark Derived classes should call this function, but are also free to
+	///         call grow<IDComponent>() directly
+	/// \see grow<class C>()
 	void EntityManagerBase::expand() {
 		grow<IDComponent>();
 	}
