@@ -61,33 +61,28 @@ namespace photon {
 	/// is O(n) plus the time required to expand every managed component.
 	unsigned int EntityManagerBase::addEntity() {
 		unsigned int IDIndex = _componentRegistry.getIndex<IDComponent>();
-		unsigned int entity; // Used in a loop below. It's out here in case expansion is necessary.
-		vector<IDComponent>* idVec= any_cast<vector<IDComponent>*>(componentCollection[IDIndex]);
+		vector<IDComponent>* idVec = any_cast<vector<IDComponent>*>(componentCollection[IDIndex]);
 
 		// Expand if we know there's no room left
 		if(_entityCount == _indexCount) {
 			expand();
-			entity = _indexCount;
 			_indexCount += PHOTON_EXPANSION_COUNT;
-			++_entityCount;
-			idVec->at(entity).activate();
-			return entity;
+			idVec->at(_entityCount++).activate(); // post increment is correct
+			return _entityCount;
 		}
 
-		// Try to add an entity at the next logical index (possible O(1) performance)
+		// Try to add an entity at the next logical index
 		if(!idVec->at(_entityCount).isActive()) {
 			idVec->at(_entityCount).activate();
 			return _entityCount++; // post increment is correct here since the index of the new entity is desired
 		}
 
-		// If that fails, fallback to scanning for a deactivated entity
-		for(entity = 0; entity < _indexCount; ++entity) {
-			if(!idVec->at(entity).isActive()) {
-				++_entityCount; // pre increment is fine here since this isn't getting returned
-				idVec->at(entity).activate();
-				return entity;
-			}
-		}
+		// Failing both of those things, get a deactivated entity and add it
+		unsigned int entity = _deactivatedEntities.back();
+		_deactivatedEntities.pop_back();
+		idVec->at(entity).activate();
+		++_entityCount;
+		return entity;
 	}
 
 	/// \warning This function is buggy and shouldn't be used yet. It was not a
@@ -97,14 +92,29 @@ namespace photon {
 	/// components.
 	void EntityManagerBase::addEntities(unsigned int count) {
 		unsigned int IDIndex = _componentRegistry.getIndex<IDComponent>();
-		unsigned int entity;
 		vector<IDComponent>* idVec = any_cast<vector<IDComponent>*>(componentCollection[IDIndex]);
-		// So very bad
-		if(count < idVec->size()) {
-			for(entity = 0; entity < count; ++entity) {
-				idVec->at(entity).activate();
-				idVec->at(entity).id = std::to_string(entity);
-			}
+
+		// This is not guaranteed to execute, and should not if the number of entities to add
+		// is less than the space already available
+		while((int)_indexCount - (int)count < (int)_entityCount) {
+			expand();
+			_indexCount += PHOTON_EXPANSION_COUNT;
+		}
+		
+		// Fill in missing entities first
+		while(_deactivatedEntities.size() > 0 && count > 0) {
+			unsigned int entity = _deactivatedEntities.back();
+			_deactivatedEntities.pop_back();
+			idVec->at(entity).activate();
+			++_entityCount;
+			--count;
+		}
+
+		// Now start at _entityCount and continue to fill
+		while(count > 0) {
+			idVec->at(_entityCount).activate();
+			++_entityCount;
+			--count;
 		}
 	}
 
@@ -114,6 +124,7 @@ namespace photon {
 		unsigned int cIndex = _componentRegistry.getIndex<IDComponent>();
 		vector<IDComponent>* v = any_cast<vector<IDComponent>*>(componentCollection[cIndex]);
 		v->at(entity).deactivate();
+		_deactivatedEntities.push_back(entity); // Add the removed entity for use later
 		--_entityCount;
 	}
 

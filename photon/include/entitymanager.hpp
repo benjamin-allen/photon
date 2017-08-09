@@ -49,6 +49,8 @@ namespace photon {
 		/// \private
 		unsigned int _indexCount;
 
+		std::vector<unsigned int> _deactivatedEntities;
+
 		/// \brief The entity manager's internal component registry.
 		/// \see ComponentRegistry
 		ComponentRegistry _componentRegistry;
