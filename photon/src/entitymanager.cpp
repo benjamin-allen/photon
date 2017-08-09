@@ -113,14 +113,18 @@ namespace photon {
 		}
 	}
 
+	/// If the entity is already deactivated, nothing happens.
 	/// \warning This function does not touch the non-IDComponent data of an
 	/// entity. It doesn't even deactivate the components.
 	void EntityManagerBase::removeEntity(unsigned int entity) {
 		unsigned int cIndex = _componentRegistry.getIndex<IDComponent>();
 		vector<IDComponent>* v = any_cast<vector<IDComponent>*>(componentCollection[cIndex]);
-		v->at(entity).deactivate();
-		_deactivatedEntities.push_back(entity); // Add the removed entity for use later
-		--_entityCount;
+		// Add a check for whether anything changed
+		if(v->at(entity).isActive()) {
+			v->at(entity).deactivate();
+			_deactivatedEntities.push_back(entity); // Add the removed entity for use later
+			--_entityCount;
+		}
 	}
 
 	unsigned int EntityManagerBase::getEntityCount() {
