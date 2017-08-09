@@ -56,9 +56,8 @@ namespace photon {
 		destroy<IDComponent>();
 	}
 
-	/// If a few things line up right, this function can add an entity in O(1)
-	/// time. If not, performance becomes O(n), and the worst-case performance
-	/// is O(n) plus the time required to expand every managed component.
+	/// Best-case performance is O(1). Worst case is also O(1) but requires that
+	/// the collection be expanded.
 	unsigned int EntityManagerBase::addEntity() {
 		unsigned int IDIndex = _componentRegistry.getIndex<IDComponent>();
 		vector<IDComponent>* idVec = any_cast<vector<IDComponent>*>(componentCollection[IDIndex]);
@@ -85,11 +84,7 @@ namespace photon {
 		return entity;
 	}
 
-	/// \warning This function is buggy and shouldn't be used yet. It was not a
-	/// part of the design goals for 0.1.0 and was hastily added to test an
-	/// idea. Use this with extreme caution: it has undefined behaviour at
-	/// high values of count and will indiscriminately overwrite other 
-	/// components.
+	/// This is recommended over adding entities one-at-a-time with addEntity().
 	void EntityManagerBase::addEntities(unsigned int count) {
 		unsigned int IDIndex = _componentRegistry.getIndex<IDComponent>();
 		vector<IDComponent>* idVec = any_cast<vector<IDComponent>*>(componentCollection[IDIndex]);
