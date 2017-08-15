@@ -1,19 +1,19 @@
 // Photon: A fast, simple, open-source ECS library for C++
 //
 // MIT License
-// 
+//
 // Copyright(c) 2017 Benjamin Allen
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files(the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions :
-// 
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
@@ -91,7 +91,7 @@ namespace photon {
 		/// \brief Searches the component registry for the specified component.
 		/// \tparam C The component to be searched for
 		/// \return The index of the pointer to the vector in the
-		/// \c componentCollection 
+		/// \c componentCollection
 		template <class C> unsigned int getComponentVectorIndex();
 
 		/// \brief Adds an entity to the entity manager.

@@ -52,7 +52,7 @@ namespace photon {
 
 		for(int i = 0; i < _actingIndices.size(); ++i) {
 			if(_actingIndices[i] == index) {
-				_actingIndices[i].erase();
+				_actingIndices.erase(_actingIndices.begin() + i);
 				return;
 			}
 		}

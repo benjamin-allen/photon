@@ -1,19 +1,19 @@
 // Photon: A fast, simple, open-source ECS library for C++
-// 
+//
 // MIT License
-// 
+//
 // Copyright(c) 2017 Benjamin Allen
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files(the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions :
-// 
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
@@ -57,7 +57,7 @@ namespace photon {
 	/// Component.
 	///
 	/// \warning Users are discouraged from using this function to activate
-	/// or deactivate an entity's IDComponent, since it will not touch the 
+	/// or deactivate an entity's IDComponent, since it will not touch the
 	/// private variables associated with those functions.
 	template <class C>
 	void EntityManagerBase::setComponentActiveState(unsigned int entity, bool newState) {
@@ -68,10 +68,10 @@ namespace photon {
 
 		// Maybe make this touch _entityCount if necessary?
 		if(newState == true) {
-			std::any_cast<vector<C>*>(componentCollection[cIndex])->at(entity).activate();
+			std::any_cast<std::vector<C>*>(componentCollection[cIndex])->at(entity).activate();
 		}
 		else {
-			std::any_cast<vector<C>*>(componentCollection[cIndex])->at(entity).deactivate();
+			std::any_cast<std::vector<C>*>(componentCollection[cIndex])->at(entity).deactivate();
 		}
 	}
 
