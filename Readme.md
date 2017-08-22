@@ -23,30 +23,38 @@ Photon attempts to do the following things for the developer:
 
 Photon does not attempt to do any of the following:
 * Define a fully-functional implementation of an entity manager. That is left to
-  the developer due to technical reasons
+  the developer
 * Define any sets of components for use in games
 * Define any systems
-* Be purely non-object-oriented. Components do have some functions defined in
-  order to take advange of polymorphism
-
+* Be purely non-object-oriented. Some developers consider a non-OO ECS to be
+  a necessity, but this is not a design goal in Photon. 
 
 # Installation
 ### Note
-Photon is under heavy development and few environments have support. It is being
-developed as a static Windows library, although an update to use makefiles is
-planned.
+Photon uses CMake to handle build systems on different platforms. Currently the
+CMakeLists assumes that you are using GCC or MSVC, and support for other
+compilers is not assured. Photon only depends on the C++ standard library, but
+it requires the C++17 (C++1z) version of the standard library because it makes
+use of the `any` object.
 
-### Windows Prerequisites
-* Microsoft Visual Studio 2017 with C++ support (Photon needs C++17 support)
+### Dependencies
+To build Photon you will need a compiler that supports C++17 (particularly the
+`any` object found in the standard library for C++17). On Windows, MSVS 2017's
+compiler supports C++17. On Linux, GCC > 7.0 should suffice. To use CMake with
+Photon you must use CMake 3.8 or above.
 
-### Installation
-1. Download and extract Photon's source code somewhere you can find it again
-2. Open the solution (.sln) file with MSVS and build it. This will generate the 
-   static library which you can link into your code
-3. In a project in which you wish to use Photon, include the headers 
-   (`photon/include`), set the linker to search the directory containing
-   `photon.lib`, and list `photon.lib` as an additional dependency. Then, simply
-   `#include "photon.hpp"` and you're off.
+### Building
+In `photon/`:
+* `$ mkdir build`
+* `$ cd build`
+* `$ cmake ..`
+
+On Windows, use the generated .sln files.
+
+On Linux, CMake generates a MakeFile. Invoke it with `make` while in `build/`.
+
+Using `build/` isn't necessary but `build/` and `Build/` are included in the
+.gitignore, so using these directories are recommended.
 
 
 # Resources
