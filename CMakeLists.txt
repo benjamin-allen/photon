@@ -29,7 +29,7 @@ endif()
 
 if (WIN32)
 	message(STATUS "Generating build files for Windows in ${CMAKE_CURRENT_BINARY_DIR}")
-	if(NOT ${MSVC_VERSION} EQUAL 1910)
+	if(NOT ${MSVC_VERSION} GREATER_EQUAL 1900)
 		message(WARNING "Photon requires support for C++17; Visual Studio 2017 (version 15.0) or above is strongly advised.")
 	endif()
 	add_definitions(/std:c++latest)
@@ -47,8 +47,23 @@ set(
 	src/system.cpp
 )
 
-message(STATUS "Building photon version ")
-add_library(${PHOTON_LIBRARY_NAME} SHARED ${PHOTON_LIBRARY_SOURCES})
+set(
+	PHOTON_LIBRARY_INCLUDES
+
+	include/component.hpp
+	include/entitymanager.hpp
+	include/system.hpp
+	include/photon.hpp
+	include/template_component.ipp
+	include/template_entitymanager.ipp
+	include/template_system.ipp
+)
+
+message(STATUS "Building Photon version ${PHOTON_VERSION_MAJOR}.${PHOTON_VERSION_MINOR}.${PHOTON_VERSION_PATCH}")
 if(BuildStatic)
-	add_library(${PHOTON_LIBRARY_NAME} STATIC ${PHOTON_LIBRARY_SOURCES})
+	message(STATUS "Configuration for Photon as a static library.")
+	add_library(${PHOTON_LIBRARY_NAME_STATIC} STATIC ${PHOTON_LIBRARY_SOURCES} ${PHOTON_LIBRARY_INCLUDES})
+else()
+	message(STATUS "Configuration for Photon as a dynamic library.")
+	add_library(${PHOTON_LIBRARY_NAME} SHARED ${PHOTON_LIBRARY_SOURCES} ${PHOTON_LIBRARY_INCLUDES})
 endif()
