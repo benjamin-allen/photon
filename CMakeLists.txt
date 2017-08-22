@@ -5,24 +5,12 @@ set(PHOTON_VERSION_MAJOR 0)
 set(PHOTON_VERSION_MINOR 1)
 set(PHOTON_VERSION_PATCH 0)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS ON)
-
 option(BuildStatic "BuildStatic" OFF)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 if (UNIX AND NOT APPLE)
 	message(STATUS "Generating build files for Linux in ${CMAKE_CURRENT_BINARY_DIR}")
-	if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-		if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.0)
-			message(WARNING "Photon requires support for C++17; GCC version 7 or above is strongly advised.")
-		endif()
-	else()
-		message(WARNING "GCC version 7 or above is advised. Clang and others are not currently supported, however newer versions of Clang may be able to build photon.")
-		message(WARNING "Photon's CMakeLists.txt will default to using g++-7 if it is available.")
-	endif()
 	set(CMAKE_CXX_COMPILER "g++-7")
 	add_definitions(-std=c++17)
 endif()
@@ -34,6 +22,10 @@ if (WIN32)
 	endif()
 	add_definitions(/std:c++latest)
 endif()
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS ON)
 
 
 set(PHOTON_LIBRARY_NAME "libphoton-${PHOTON_VERSION_MAJOR}-${PHOTON_VERSION_MINOR}-${PHOTON_VERSION_PATCH}")
@@ -47,17 +39,21 @@ set(
 	src/system.cpp
 )
 
-set(
-	PHOTON_LIBRARY_INCLUDES
+if(WIN32)
+	set(
+		PHOTON_LIBRARY_INCLUDES
 
-	include/component.hpp
-	include/entitymanager.hpp
-	include/system.hpp
-	include/photon.hpp
-	include/template_component.ipp
-	include/template_entitymanager.ipp
-	include/template_system.ipp
-)
+		include/component.hpp
+		include/entitymanager.hpp
+		include/system.hpp
+		include/photon.hpp
+		include/template_component.ipp
+		include/template_entitymanager.ipp
+		include/template_system.ipp
+	)
+else()
+	set(PHOTON_LIBRARY_INCLUDES)
+endif()
 
 message(STATUS "Building Photon version ${PHOTON_VERSION_MAJOR}.${PHOTON_VERSION_MINOR}.${PHOTON_VERSION_PATCH}")
 if(BuildStatic)
