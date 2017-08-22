@@ -19,7 +19,7 @@ if (UNIX AND NOT APPLE)
 		if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.0)
 			message(WARNING "Photon requires support for C++17; GCC version 7 or above is strongly advised.")
 		endif()
-	else
+	else()
 		message(WARNING "GCC version 7 or above is advised. Clang and others are not currently supported, however newer versions of Clang may be able to build photon.")
 		message(WARNING "Photon's CMakeLists.txt will default to using g++-7 if it is available.")
 	endif()
