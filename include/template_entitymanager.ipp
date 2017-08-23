@@ -41,7 +41,7 @@ namespace photon {
 		_componentRegistry.registerComponent<C>();
 
 		// See if this block can be simplified with one of vector's constructors
-		std::vector<C>* vector = new std::vector<C>;
+		std::shared_ptr<std::vector<C>> vector(new std::vector<C>);
 		vector->resize(_indexCount);
 		for(unsigned int i = 0; i < _indexCount; ++i) {
 			C c;
@@ -49,7 +49,7 @@ namespace photon {
 		}
 
 		std::any obj;
-		obj.emplace<std::vector<C>*>(vector);
+		obj.emplace<std::shared_ptr<std::vector<C>>>(vector);
 		componentCollection.push_back(obj);
 	}
 
@@ -68,10 +68,10 @@ namespace photon {
 
 		// Maybe make this touch _entityCount if necessary?
 		if(newState == true) {
-			std::any_cast<std::vector<C>*>(componentCollection[cIndex])->at(entity).activate();
+			std::any_cast<std::shared_ptr<std::vector<C>>>(componentCollection[cIndex])->at(entity).activate();
 		}
 		else {
-			std::any_cast<std::vector<C>*>(componentCollection[cIndex])->at(entity).deactivate();
+			std::any_cast<std::shared_ptr<std::vector<C>>>(componentCollection[cIndex])->at(entity).deactivate();
 		}
 	}
 
@@ -97,8 +97,9 @@ namespace photon {
 			throw std::invalid_argument("Class is not a component");
 		}
 		unsigned int cIndex = _componentRegistry.getIndex<C>();
-		std::vector<C>* cVec = std::any_cast<std::vector<C>*>(componentCollection[cIndex]);
-		cVec->resize(cVec->size() + PHOTON_EXPANSION_COUNT); // Note this is not just PHOTON_EXPANSION_COUNT
+		std::shared_ptr<std::vector<C>> cVec = std::any_cast<std::shared_ptr<std::vector<C>>>(componentCollection[cIndex]);
+		cVec->resize(cVec->size() * PHOTON_EXPANSION_FACTOR); // Should have gone with this the first time
+		_indexCount *= PHOTON_EXPANSION_FACTOR;
 	}
 
 	/// Throws an exception if the class parameter is not a derivative of
@@ -114,9 +115,7 @@ namespace photon {
 			throw std::invalid_argument("Class is not a component");
 		}
 		unsigned int cIndex = _componentRegistry.getIndex<C>();
-		std::vector<C>* cVec = std::any_cast<std::vector<C>*>(componentCollection[cIndex]);
-		delete cVec;
-		componentCollection[cIndex].reset(); // don't forget to toss the pointer
+		componentCollection[cIndex].reset(); // toss the object
 	}
 
 }

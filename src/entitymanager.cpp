@@ -27,6 +27,7 @@
 
 using std::string;
 using std::vector;
+using std::shared_ptr;
 using std::any;
 using std::any_cast;
 
@@ -59,12 +60,11 @@ namespace photon {
 	/// the collection be expanded.
 	unsigned int EntityManagerBase::addEntity() {
 		unsigned int IDIndex = _componentRegistry.getIndex<IDComponent>();
-		vector<IDComponent>* idVec = any_cast<vector<IDComponent>*>(componentCollection[IDIndex]);
+		shared_ptr<vector<IDComponent>> idVec = any_cast<shared_ptr<vector<IDComponent>>>(componentCollection[IDIndex]);
 
 		// Expand if we know there's no room left
 		if(_entityCount == _indexCount) {
 			expand();
-			_indexCount += PHOTON_EXPANSION_COUNT;
 			idVec->at(_entityCount++).activate(); // post increment is correct
 			return _entityCount;
 		}
@@ -86,13 +86,12 @@ namespace photon {
 	/// This is recommended over adding entities one-at-a-time with addEntity().
 	void EntityManagerBase::addEntities(unsigned int count) {
 		unsigned int IDIndex = _componentRegistry.getIndex<IDComponent>();
-		vector<IDComponent>* idVec = any_cast<vector<IDComponent>*>(componentCollection[IDIndex]);
+		shared_ptr<vector<IDComponent>> idVec = any_cast<shared_ptr<vector<IDComponent>>>(componentCollection[IDIndex]);
 
 		// This is not guaranteed to execute, and should not if the number of entities to add
 		// is less than the space already available
 		while((int)_indexCount - (int)count < (int)_entityCount) {
 			expand();
-			_indexCount += PHOTON_EXPANSION_COUNT;
 		}
 		
 		// Fill in missing entities first
@@ -117,7 +116,7 @@ namespace photon {
 	/// entity. It doesn't even deactivate the components.
 	void EntityManagerBase::removeEntity(unsigned int entity) {
 		unsigned int cIndex = _componentRegistry.getIndex<IDComponent>();
-		vector<IDComponent>* v = any_cast<vector<IDComponent>*>(componentCollection[cIndex]);
+		shared_ptr<vector<IDComponent>> v = any_cast<shared_ptr<vector<IDComponent>>>(componentCollection[cIndex]);
 		// Add a check for whether anything changed
 		if(v->at(entity).isActive()) {
 			v->at(entity).deactivate();

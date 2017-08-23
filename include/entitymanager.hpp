@@ -26,9 +26,10 @@
 
 #include "component.hpp"
 #include <any>
+#include <memory>
 
 #define PHOTON_INITIAL_ALLOCATION 1000
-#define PHOTON_EXPANSION_COUNT PHOTON_INITIAL_ALLOCATION / 2
+#define PHOTON_EXPANSION_FACTOR 2
 
 namespace photon {
 

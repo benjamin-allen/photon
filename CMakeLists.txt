@@ -5,8 +5,6 @@ set(PHOTON_VERSION_MAJOR 0)
 set(PHOTON_VERSION_MINOR 1)
 set(PHOTON_VERSION_PATCH 0)
 
-option(BuildStatic "BuildStatic" OFF)
-
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 if (UNIX AND NOT APPLE)
@@ -56,10 +54,5 @@ else()
 endif()
 
 message(STATUS "Building Photon version ${PHOTON_VERSION_MAJOR}.${PHOTON_VERSION_MINOR}.${PHOTON_VERSION_PATCH}")
-if(BuildStatic)
-	message(STATUS "Configuration for Photon as a static library.")
-	add_library(${PHOTON_LIBRARY_NAME_STATIC} STATIC ${PHOTON_LIBRARY_SOURCES} ${PHOTON_LIBRARY_INCLUDES})
-else()
-	message(STATUS "Configuration for Photon as a dynamic library.")
-	add_library(${PHOTON_LIBRARY_NAME} SHARED ${PHOTON_LIBRARY_SOURCES} ${PHOTON_LIBRARY_INCLUDES})
-endif()
+add_library(${PHOTON_LIBRARY_NAME_STATIC} STATIC ${PHOTON_LIBRARY_SOURCES} ${PHOTON_LIBRARY_INCLUDES})
+add_library(${PHOTON_LIBRARY_NAME} SHARED ${PHOTON_LIBRARY_SOURCES} ${PHOTON_LIBRARY_INCLUDES})
