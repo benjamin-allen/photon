@@ -32,11 +32,12 @@ namespace photon {
 	/// Systems perform logic on entities and their components. Photon's
 	/// implementation of systems is currently barebones and WIP. Ssytems target
 	/// an entity manager via a pointer and use that pointer to access its data.
+	template <typename EM>
 	class System {
 	protected:
 
 		/// \brief The entity manager associated with this system.
-		EntityManagerBase* _target;
+		EM* _target;
 
 		/// \brief Indices of vectors to be checked for availability
 		/// \remarks Its use is not required or enforced by any code.
@@ -48,7 +49,7 @@ namespace photon {
 
 		/// \brief Constructs a system object.
 		/// \param target Pointer to the desired target entity manager
-		System(EntityManagerBase* target);
+		System(EM* target);
 
 		/// \brief Virtual space to write system logic in.
 		/// \warning This is an abstract function.
@@ -63,9 +64,10 @@ namespace photon {
 		template <class C> void untargetComponent();
 
 		/// \return The system's target entity manager.
-		EntityManagerBase* target();
+		EM* target();
 	};
 
 }
 
 #include "template_system.ipp"
+#include "nontemplate_system.ipp"

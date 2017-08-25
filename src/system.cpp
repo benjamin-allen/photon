@@ -26,15 +26,4 @@
 
 namespace photon {
 
-	/// Throws an exception if target is null.
-	System::System(EntityManagerBase* target) {
-		_target = target;
-		if(!_target) {
-			throw std::invalid_argument("Unsuitable target EntityManager");
-		}
-	}
-
-	EntityManagerBase* System::target() {
-		return _target;
-	}
 }

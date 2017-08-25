@@ -133,3 +133,4 @@ namespace photon {
 }
 
 #include "template_entitymanager.ipp"
+#include "nontemplate_entitymanager.ipp"

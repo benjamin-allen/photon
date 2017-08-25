@@ -28,8 +28,9 @@ namespace photon {
 
 	/// Throws an exception if the class parameter is not a derivative of
 	/// Component.
+	template <typename EM>
 	template <class C>
-	void System::targetComponent() {
+	void System<EM>::targetComponent() {
 		if(!std::is_base_of<Component, C>::value) {
 			throw std::invalid_argument("Class is not a component");
 		}
@@ -42,8 +43,9 @@ namespace photon {
 
 	/// Throws an exception if the class parameter is not a derivative of
 	/// Component.
+	template <typename EM>
 	template <class C>
-	void System::untargetComponent() {
+	void System<EM>::untargetComponent() {
 		if(!std::is_base_of<Component, C>::value) {
 			throw std::invalid_argument("Class is not a component");
 		}
