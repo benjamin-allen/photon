@@ -33,11 +33,13 @@ namespace photon {
 	///
 	/// Throws an exception if the class parameter is not a derivative of
 	/// Component.
+	template <typename... Components>
 	template <typename... Cs>
-	typename std::enable_if<sizeof...(Cs) == 0>::type EntityManagerBase::registerComponent() { }
+	typename std::enable_if<sizeof...(Cs) == 0>::type EntityManagerBase<Components...>::registerComponent() { }
 
+	template <typename... Components>
 	template <typename C, typename... Cs>
-	void EntityManagerBase::registerComponent() {
+	void EntityManagerBase<Components...>::registerComponent() {
 		if (!std::is_base_of<Component, C>::value) {
 			throw std::invalid_argument("Class is not a component");
 		}
@@ -57,11 +59,13 @@ namespace photon {
 		registerComponent<Cs...>();
 	}
 
+	template <typename... Components>
 	template <typename... Cs>
-	typename std::enable_if<sizeof...(Cs) == 0>::type EntityManagerBase::destroyComponent() { }
+	typename std::enable_if<sizeof...(Cs) == 0>::type EntityManagerBase<Components...>::destroyComponent() { }
 
+	template <typename... Components>
 	template <typename C, typename... Cs>
-	void EntityManagerBase::destroyComponent() {
+	void EntityManagerBase<Components...>::destroyComponent() {
 		if (!std::is_base_of<Component, C>::value) {
 			throw std::invalid_argument("Class is not a component");
 		}
@@ -70,11 +74,13 @@ namespace photon {
 		destroyComponent<Cs...>();
 	}
 
+	template <typename... Components>
 	template <typename... Cs>
-	typename std::enable_if<sizeof...(Cs) == 0>::type EntityManagerBase::growComponent() { }
+	typename std::enable_if<sizeof...(Cs) == 0>::type EntityManagerBase<Components...>::growComponent() { }
 
+	template <typename... Components>
 	template <typename C, typename... Cs>
-	void EntityManagerBase::growComponent() {
+	void EntityManagerBase<Components...>::growComponent() {
 		if (!std::is_base_of<Component, C>::value) {
 			throw std::invalid_argument("Class is not a component");
 		}
@@ -92,8 +98,9 @@ namespace photon {
 	/// \warning Users are discouraged from using this function to activate
 	/// or deactivate an entity's IDComponent, since it will not touch the
 	/// private variables associated with those functions.
+	template <typename... Components>
 	template <class C>
-	void EntityManagerBase::setComponentActiveState(unsigned int entity, bool newState) {
+	void EntityManagerBase<Components...>::setComponentActiveState(unsigned int entity, bool newState) {
 		if(!std::is_base_of<Component, C>::value) {
 			throw std::invalid_argument("Class is not a component");
 		}
@@ -111,32 +118,13 @@ namespace photon {
 	/// Throws an exception if the class parameter is not a derivative of
 	/// Component. Also makes calls to another function that can throw
 	/// other exceptions if the class parameter is not registered.
+	template <typename... Components>
 	template <class C>
-	unsigned int EntityManagerBase::getComponentVectorIndex() {
+	unsigned int EntityManagerBase<Components...>::getComponentVectorIndex() {
 		if(!std::is_base_of<Component, C>::value) {
 			throw std::invalid_argument("Class is not a component");
 		}
 		return _componentRegistry.getIndex<C>();
-	}
-
-	/// Throws an exception if the class parameter is not a derivative of
-	/// Component.
-	///
-	/// \warning This expands by a set amount, so each class should be called
-	/// as many times as the others or the collection will desynchronize.
-	template <class C>
-	void EntityManagerBase::grow() {
-	}
-
-	/// Throws an exception if the class parameter is not a derivative of
-	/// Component. Will call other functions that throw execptions if used
-	/// improperly.
-	///
-	/// \warning Like \c grow() , this should be called only once per component
-	/// during destruction. The \c std::any objects are reset and their pointers
-	/// are removed, so attempting to cast them will cause a bad cast exception.
-	template <class C>
-	void EntityManagerBase::destroy() {
 	}
 
 }

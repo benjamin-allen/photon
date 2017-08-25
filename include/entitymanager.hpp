@@ -40,6 +40,7 @@ namespace photon {
 	/// important of which is the \c componentCollection , a vector of pointers
 	/// to vectors of components. This part of the API is the most volatile and
 	/// where most of the effort in optimization is put.
+	template <typename... Components>
 	class EntityManagerBase {
 	private:
 		template <typename... Cs> typename std::enable_if<sizeof...(Cs) == 0>::type registerComponent();
