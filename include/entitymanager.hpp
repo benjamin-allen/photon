@@ -27,6 +27,7 @@
 #include "component.hpp"
 #include <any>
 #include <memory>
+#include <type_traits>
 
 #define PHOTON_INITIAL_ALLOCATION 1000
 #define PHOTON_EXPANSION_FACTOR 2
@@ -41,6 +42,12 @@ namespace photon {
 	/// where most of the effort in optimization is put.
 	class EntityManagerBase {
 	private:
+		template <typename... Cs> typename std::enable_if<sizeof...(Cs) == 0>::type registerComponent();
+		template <typename C, typename... Cs> void registerComponent();
+		template <typename... Cs> typename std::enable_if<sizeof...(Cs) == 0>::type destroyComponent();
+		template <typename C, typename... Cs> void destroyComponent();
+		template <typename... Cs> typename std::enable_if<sizeof...(Cs) == 0>::type growComponent();
+		template <typename C, typename... Cs> void growComponent();
 
 		/// \brief The number of entities currently active in the world.
 		/// \private
@@ -81,7 +88,7 @@ namespace photon {
 
 		/// \brief Adds a component to be managed by an entity manager.
 		/// \tparam C The component to be managed
-		template <class C> void registerComponent();
+		//template <class C> void registerComponent();
 
 		/// \brief Modifies a managed component's current state on an entity.
 		/// \tparam C The component to be modified

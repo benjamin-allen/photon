@@ -32,7 +32,7 @@ using std::any;
 using std::any_cast;
 
 namespace photon {
-	
+
 	/// Derived entity managers should have this constructor in their
 	/// initialization list.
 	///
@@ -41,7 +41,7 @@ namespace photon {
 	EntityManagerBase::EntityManagerBase() {
 		_entityCount = 0;
 		_indexCount = PHOTON_INITIAL_ALLOCATION;
-
+		IDComponent i;
 		registerComponent<IDComponent>();
 	}
 
@@ -93,7 +93,7 @@ namespace photon {
 		while((int)_indexCount - (int)count < (int)_entityCount) {
 			expand();
 		}
-		
+
 		// Fill in missing entities first
 		while(_deactivatedEntities.size() > 0 && count > 0) {
 			unsigned int entity = _deactivatedEntities.back();

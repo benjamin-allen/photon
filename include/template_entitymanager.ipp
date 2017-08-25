@@ -33,9 +33,12 @@ namespace photon {
 	///
 	/// Throws an exception if the class parameter is not a derivative of
 	/// Component.
-	template <class C>
+	template <typename... Cs>
+	typename std::enable_if<sizeof...(Cs) == 0>::type EntityManagerBase::registerComponent() { }
+
+	template <typename C, typename... Cs>
 	void EntityManagerBase::registerComponent() {
-		if(!std::is_base_of<Component, C>::value) {
+		if (!std::is_base_of<Component, C>::value) {
 			throw std::invalid_argument("Class is not a component");
 		}
 		_componentRegistry.registerComponent<C>();
@@ -43,7 +46,7 @@ namespace photon {
 		// See if this block can be simplified with one of vector's constructors
 		std::shared_ptr<std::vector<C>> vector(new std::vector<C>);
 		vector->resize(_indexCount);
-		for(unsigned int i = 0; i < _indexCount; ++i) {
+		for (unsigned int i = 0; i < _indexCount; ++i) {
 			C c;
 			vector->at(i) = c;
 		}
@@ -51,7 +54,37 @@ namespace photon {
 		std::any obj;
 		obj.emplace<std::shared_ptr<std::vector<C>>>(vector);
 		componentCollection.push_back(obj);
+		registerComponent<Cs...>();
 	}
+
+	template <typename... Cs>
+	typename std::enable_if<sizeof...(Cs) == 0>::type EntityManagerBase::destroyComponent() { }
+
+	template <typename C, typename... Cs>
+	void EntityManagerBase::destroyComponent() {
+		if (!std::is_base_of<Component, C>::value) {
+			throw std::invalid_argument("Class is not a component");
+		}
+		unsigned int cIndex = _componentRegistry.getIndex<C>();
+		componentCollection[cIndex].reset(); // toss the object
+		destroyComponent<Cs...>();
+	}
+
+	template <typename... Cs>
+	typename std::enable_if<sizeof...(Cs) == 0>::type EntityManagerBase::growComponent() { }
+
+	template <typename C, typename... Cs>
+	void EntityManagerBase::growComponent() {
+		if (!std::is_base_of<Component, C>::value) {
+			throw std::invalid_argument("Class is not a component");
+		}
+		unsigned int cIndex = _componentRegistry.getIndex<C>();
+		std::shared_ptr<std::vector<C>> cVec = std::any_cast<std::shared_ptr<std::vector<C>>>(componentCollection[cIndex]);
+		cVec->resize(cVec->size() * PHOTON_EXPANSION_FACTOR); // Should have gone with this the first time
+		_indexCount *= PHOTON_EXPANSION_FACTOR;
+		growComponent<Cs...>();
+	}
+
 
 	/// Throws an exception if the class parameter is not a derivative of
 	/// Component.
@@ -93,13 +126,6 @@ namespace photon {
 	/// as many times as the others or the collection will desynchronize.
 	template <class C>
 	void EntityManagerBase::grow() {
-		if(!std::is_base_of<Component, C>::value) {
-			throw std::invalid_argument("Class is not a component");
-		}
-		unsigned int cIndex = _componentRegistry.getIndex<C>();
-		std::shared_ptr<std::vector<C>> cVec = std::any_cast<std::shared_ptr<std::vector<C>>>(componentCollection[cIndex]);
-		cVec->resize(cVec->size() * PHOTON_EXPANSION_FACTOR); // Should have gone with this the first time
-		_indexCount *= PHOTON_EXPANSION_FACTOR;
 	}
 
 	/// Throws an exception if the class parameter is not a derivative of
@@ -111,11 +137,6 @@ namespace photon {
 	/// are removed, so attempting to cast them will cause a bad cast exception.
 	template <class C>
 	void EntityManagerBase::destroy() {
-		if(!std::is_base_of<Component, C>::value) {
-			throw std::invalid_argument("Class is not a component");
-		}
-		unsigned int cIndex = _componentRegistry.getIndex<C>();
-		componentCollection[cIndex].reset(); // toss the object
 	}
 
 }
