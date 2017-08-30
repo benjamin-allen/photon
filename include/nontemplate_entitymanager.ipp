@@ -13,6 +13,7 @@ namespace photon {
 		_indexCount = PHOTON_INITIAL_ALLOCATION;
 		IDComponent i;
 		registerComponent<IDComponent>();
+		registerComponent<Components...>();
 	}
 
 	/// Derived entity managers should call destroy on components registered
@@ -24,7 +25,8 @@ namespace photon {
 	/// \remark This handles the destruction of IDComponent.
 	template<typename... Components>
 	EntityManagerBase<Components...>::~EntityManagerBase() {
-		destroy<IDComponent>();
+		destroyComponent<IDComponent>();
+		destroyComponent<Components...>();
 	}
 
 	/// Best-case performance is O(1). Worst case is also O(1) but requires that
@@ -32,11 +34,12 @@ namespace photon {
 	template<typename... Components>
 	unsigned int EntityManagerBase<Components...>::addEntity() {
 		unsigned int IDIndex = _componentRegistry.getIndex<IDComponent>();
-		shared_ptr<vector<IDComponent>> idVec = any_cast<shared_ptr<vector<IDComponent>>>(componentCollection[IDIndex]);
+		std::shared_ptr<std::vector<IDComponent>> idVec = std::any_cast<std::shared_ptr<std::vector<IDComponent>>>(componentCollection[IDIndex]);
 
 		// Expand if we know there's no room left
 		if(_entityCount == _indexCount) {
-			expand();
+			growComponent<IDComponent>();
+			growComponent<Components...>();
 			idVec->at(_entityCount++).activate(); // post increment is correct
 			return _entityCount;
 		}
@@ -59,12 +62,13 @@ namespace photon {
 	template <typename... Components>
 	void EntityManagerBase<Components...>::addEntities(unsigned int count) {
 		unsigned int IDIndex = _componentRegistry.getIndex<IDComponent>();
-		shared_ptr<vector<IDComponent>> idVec = any_cast<shared_ptr<vector<IDComponent>>>(componentCollection[IDIndex]);
+		std::shared_ptr<std::vector<IDComponent>> idVec = std::any_cast<std::shared_ptr<std::vector<IDComponent>>>(componentCollection[IDIndex]);
 
 		// This is not guaranteed to execute, and should not if the number of entities to add
 		// is less than the space already available
 		while((int)_indexCount - (int)count < (int)_entityCount) {
-			expand();
+			growComponent<IDComponent>();
+			growComponent<Components...>();
 		}
 
 		// Fill in missing entities first
@@ -90,7 +94,7 @@ namespace photon {
 	template <typename... Components>
 	void EntityManagerBase<Components...>::removeEntity(unsigned int entity) {
 		unsigned int cIndex = _componentRegistry.getIndex<IDComponent>();
-		shared_ptr<vector<IDComponent>> v = any_cast<shared_ptr<vector<IDComponent>>>(componentCollection[cIndex]);
+		std::shared_ptr<std::vector<IDComponent>> v = std::any_cast<std::shared_ptr<std::vector<IDComponent>>>(componentCollection[cIndex]);
 		// Add a check for whether anything changed
 		if(v->at(entity).isActive()) {
 			v->at(entity).deactivate();
@@ -104,13 +108,4 @@ namespace photon {
 		return _entityCount;
 	}
 
-
-	/// \remark This handles the expansion of IDComponent
-	/// \remark Derived classes should call this function, but are also free to
-	///         call grow<IDComponent>() directly
-	/// \see grow<class C>()
-	template <typename... Components>
-	void EntityManagerBase<Components...>::expand() {
-		grow<IDComponent>();
-	}
 }

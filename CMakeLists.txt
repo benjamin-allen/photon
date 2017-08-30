@@ -32,8 +32,6 @@ set(
 	PHOTON_LIBRARY_SOURCES
 
 	src/component.cpp
-	src/entitymanager.cpp
-	src/system.cpp
 )
 
 if(WIN32)
@@ -48,6 +46,7 @@ if(WIN32)
 		include/template_entitymanager.ipp
 		include/template_system.ipp
 		include/nontemplate_entitymanager.ipp
+		include/nontemplate_system.ipp
 	)
 else()
 	set(PHOTON_LIBRARY_INCLUDES)

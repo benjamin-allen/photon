@@ -66,19 +66,6 @@ namespace photon {
 		/// \see ComponentRegistry
 		ComponentRegistry _componentRegistry;
 
-	protected:
-
-		/// \brief Called when the entity manager needs to allocate more space.
-		virtual void expand();
-
-		/// \brief Called as part of \c expand() .
-		/// \tparam C The component vector to be expanded.
-		template <class C> void grow();
-
-		/// \brief Called as part of the destructor.
-		/// \tparam C The component vector to be destroyed.
-		template <class C> void destroy();
-
 	public:
 
 		/// \brief Base constructor for EntityManagerBase.
