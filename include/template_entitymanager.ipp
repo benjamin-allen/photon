@@ -127,4 +127,9 @@ namespace photon {
 		return _componentRegistry.getIndex<C>();
 	}
 
+	template <typename... Components>
+	template <class C>
+	std::shared_ptr<std::vector<C>> EntityManagerBase<Components...>::getVectorReference() {
+		return std::any_cast<std::shared_ptr<std::vector<C>>>(componentCollection[getComponentVectorIndex<C>()]);
+	}
 }

@@ -90,6 +90,8 @@ namespace photon {
 		/// \c componentCollection
 		template <class C> unsigned int getComponentVectorIndex();
 
+		template <class C> std::shared_ptr<std::vector<C>> getVectorReference();
+
 		/// \brief Adds an entity to the entity manager.
 		/// \return The index of the new entity
 		unsigned int addEntity();
