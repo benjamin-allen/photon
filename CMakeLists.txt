@@ -2,7 +2,7 @@ project (PHOTON)
 cmake_minimum_required(VERSION 3.8)
 
 set(PHOTON_VERSION_MAJOR 0)
-set(PHOTON_VERSION_MINOR 1)
+set(PHOTON_VERSION_MINOR 2)
 set(PHOTON_VERSION_PATCH 0)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
