@@ -1,19 +1,19 @@
 // Photon: A fast, simple, open-source ECS library for C++
-// 
+//
 // MIT License
-// 
+//
 // Copyright(c) 2017 Benjamin Allen
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files(the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions :
-// 
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
@@ -29,14 +29,17 @@ namespace photon {
 
 	/// \brief Provides a base on which to construct systems.
 	///
+	/// \tparam The Class of EntityManager supported by this system.
+	///
 	/// Systems perform logic on entities and their components. Photon's
 	/// implementation of systems is currently barebones and WIP. Ssytems target
 	/// an entity manager via a pointer and use that pointer to access its data.
+	template <typename EM>
 	class System {
 	protected:
 
 		/// \brief The entity manager associated with this system.
-		EntityManagerBase* _target;
+		EM* _target;
 
 		/// \brief Indices of vectors to be checked for availability
 		/// \remarks Its use is not required or enforced by any code.
@@ -48,7 +51,7 @@ namespace photon {
 
 		/// \brief Constructs a system object.
 		/// \param target Pointer to the desired target entity manager
-		System(EntityManagerBase* target);
+		System(EM* target);
 
 		/// \brief Virtual space to write system logic in.
 		/// \warning This is an abstract function.
@@ -63,9 +66,10 @@ namespace photon {
 		template <class C> void untargetComponent();
 
 		/// \return The system's target entity manager.
-		EntityManagerBase* target();
+		EM* target();
 	};
 
 }
 
 #include "template_system.ipp"
+#include "nontemplate_system.ipp"

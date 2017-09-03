@@ -24,6 +24,9 @@
 
 #pragma once
 
+#include <stdexcept>
+#include <algorithm>
+
 namespace photon {
 
 	/// Appends the identifier string of the component to the registry vector.

@@ -261,5 +261,6 @@ __pycache__/
 *.pyc
 
 # Misc
-/photon/doc/Todo.md
-/photon/doc/Doxygen
+doc/Todo.md
+doc/Doxygen/
+[Bb]uild/
