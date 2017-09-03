@@ -22,8 +22,7 @@ which will be the identifier for all objects of type `PositionComponent`.
 ## Entity Manager
 #### Implementing the entity manager
 `photon::EntityManagerBase` is an class from which you can derive and implement
-variations of the entity manager. In each derivative class, you need to
-implement a destructor and expansion functions. `EntityManagerBase` contains
+variations of the entity manager. `EntityManagerBase` contains
 code to handle `IDComponent`, which is used to give entities `id` strings.
 Additionally, entities whose IDComponents are not active are said to be inactive
 themselves, so it is the standard check for whether an entity exists at that
@@ -32,31 +31,19 @@ index.
 To just use `EntityManagerBase` for some quick experimentation you can implement
 
 ```
-class EntityManager : public EntityManagerBase {
+class EntityManager : public EntityManagerBase<> {
 public:
-    EntityManager() : EntityManagerBase() { }
-    ~EntityManager() { }
+    EntityManager() : EntityManagerBase()<> { }
 };
 ```
 
 However you're not going to make a very interesting game with just some strings.
-Three main actions must be defined by derivatives: construction, destruction, 
-and expansion. So let's define an EntityManager that also has our 
-`PositionComponent` from above.
+Let's define an EntityManager that also has our `PositionComponent` from above.
 
 ```
-class AnotherEntityManager : public EntityManagerBase {
+class EntityManager : public EntityManagerBase<PositionComponent> {
 public:
-    AnotherEntityManager() : EntityManagerBase() {
-        registerComponent<PositionComponent>();
-    }
-    ~AnotherEntityManager() {
-        destroy<PositionComponent>();
-    }
-    void Expand() {
-        EntityManagerBase::expand();
-        grow<PositionComponent>();
-    }
+    EntityManager() : EntityManagerBase<PositionComponent>() { }
 };
 ```
 
@@ -71,69 +58,71 @@ adds an entity to it. Then it accesses the ID of the newly-created entity and
 changes it to "foo."
 
 ```
-AnotherEntityManager aem;
+EntityManager em;
 
-unsigned int entity1 = aem.addEntity();
+unsigned int entity1 = em.addEntity();
 
-unsigned int i = aem.getComponentVectorIndex<IDComponent>();
-vector<IDComponent>* idVec = any_cast<vector<IDComponent>*>(aem.componentCollection[i]);
-
+auto idVec = em.getVectorReference<IDComponent>();
 idVec->at(entity1).id = "foo";
 ```
 
-In the above example an entity is created, its index stored in `entity1`, and
-that index being used to access a position in the vector. A simplified interface
-is planned. The best I can say about it at the moment is that we don't have to
-deal with reassignment since we're dealing with pointers.
+Note that when you write systems the speed-optimized version will be slightly
+different, but the principle is the same. Entities are activated when they are
+added, so they will be processed by any subsequent calls to systems that rely
+on their activated components.
 
 
-#### Activating components and removing an entity
-Following the code snippet before...
-
+#### Removing an entity
 ```
-aem.setComponentActiveState<PositionComponent>(entity1, true);
 // Do stuff with PositionComponent...
 // ...
-aem.removeEntity(entity1);
+em.removeEntity(entity1);
 ``` 
 
-The `PositionComponent` object is activated and can now be considered as part of
-the entity. Using the same process as above to retrieve the vector you can
-modify the data at `PositionComponent`.
-
+This function deactivates the entity's IDComponent, marking it as fully
+deactivated, but no other data in the entity has been modified.
 
 ## Systems
-Systems perform logic on entities. An implementation of one which hashes entity
-ID strings is below.
+Systems perform logic by iterating over the data within an entity manager and
+modifying it or using it. Since the EntityManagerBase class is abstract but
+systems still need to be able to access an entity manager, a system derived
+from `photon::system` must have a template argument specifying what class of
+entity manager it operates on. An instance of that entity manager class is
+called the system's target.
+
+Below is an example of a system that alter's a PositionComponent.
 
 ```
-class IDHashingSystem : public photon::System {
+class MoveSystem : public System<EntityManager> {
 public:
-	IDHashingSystem(AnotherEntityManager* e) : photon::System(e) { };
+	MoveSystem(EntityManager* target) : System<EntityManager>(target) { }
 
 	void run() {
-		unsigned int cIndex = target()->getComponentVectorIndex<photon::IDComponent>();
-		std::vector<photon::IDComponent>* idVec = std::any_cast<std::vector<photon::IDComponent>*>(target()->componentCollection[cIndex]);
-		for(int i = 0; i < idVec->size(); ++i) {
-			if(idVec->at(i).isActive()) {
-				idVec->at(i).id = std::hash<std::string>{}(idVec->at(i).id);
+		auto idPointer = &target()->getVectorReference<IDComponent>()->get(0);
+		auto posPointer = &target()->getVectorReference<PositionComponent>()->get(0);
+		int entities = target()->getEntityCount();
+		int i = 0;
+		while(i < entities) {
+			if(idPointer->isActive() && posPointer->isActive()) {
+				posPointer->x += 1;
+				posPointer->y += 1;
 			}
+			// Instead of dereferencing a pointer to a component in a vector,
+			// increment the pointer itself, which is safer since the components
+			// are contiguous in memory anyways.
+			++i; ++posPointer; ++idPointer;
 		}
 	}
-};
 ```
 
 The important part to note about systems is that their constructors accept an
 argument to an entity manager. This is the "target", which allows the system
-access to a given entity manager. The system's `Run()` method loops through all
-of the `IDComponents` and hashes the ID string of any active entity.
+access to a given entity manager. The system's `run()` method performs logic.
 
-The following code shows the use of a system, where `aem` is the entity manager
-implemented previously.
-
+To use a system:
 ```
-IDHashingSystem idhs(&aem);
-idhs.run();
+MoveSystem ms(&em);
+ms.run();
 ```
 
 ## Note
@@ -141,3 +130,6 @@ Photon is still early in its development and much of this API can and will
 change. Hopefully the changes will be fully documented when pushed onto the
 master branch, but if you try to use an unstable branch there's no guarantee
 any of the code laid out here will work. Or that Photon will even compile.
+
+Particularly, expect Systems to change in 0.3. Making them easier to use is the
+next goal.

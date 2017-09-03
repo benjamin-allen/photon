@@ -26,6 +26,10 @@
 
 namespace photon {
 
+	template <typename... Components>
+	template <typename... Cs>
+	typename std::enable_if<sizeof...(Cs) == 0>::type EntityManagerBase<Components...>::registerComponent() { }
+
 	/// Adds a component to the component registry and then expands the
 	/// component collection with a pointer to a new vector. That vector is
 	/// expanded to match the size of the rest of the collection and filled
@@ -33,10 +37,6 @@ namespace photon {
 	///
 	/// Throws an exception if the class parameter is not a derivative of
 	/// Component.
-	template <typename... Components>
-	template <typename... Cs>
-	typename std::enable_if<sizeof...(Cs) == 0>::type EntityManagerBase<Components...>::registerComponent() { }
-
 	template <typename... Components>
 	template <typename C, typename... Cs>
 	void EntityManagerBase<Components...>::registerComponent() {
@@ -63,6 +63,7 @@ namespace photon {
 	template <typename... Cs>
 	typename std::enable_if<sizeof...(Cs) == 0>::type EntityManagerBase<Components...>::destroyComponent() { }
 
+    /// Deletes the component data fully and resets the std::any object
 	template <typename... Components>
 	template <typename C, typename... Cs>
 	void EntityManagerBase<Components...>::destroyComponent() {
@@ -78,6 +79,7 @@ namespace photon {
 	template <typename... Cs>
 	typename std::enable_if<sizeof...(Cs) == 0>::type EntityManagerBase<Components...>::growComponent() { }
 
+    /// Doubles the size of the data vector
 	template <typename... Components>
 	template <typename C, typename... Cs>
 	void EntityManagerBase<Components...>::growComponent() {

@@ -35,13 +35,14 @@ Photon uses CMake to handle build systems on different platforms. Currently the
 CMakeLists assumes that you are using GCC or MSVC, and support for other
 compilers is not assured. Photon only depends on the C++ standard library, but
 it requires the C++17 (C++1z) version of the standard library because it makes
-use of the `any` object.
+use of the `any` object. (Note: On older versions of GCC, use of the 
+`any-experimental` header will not work)
 
 ### Dependencies
 To build Photon you will need a compiler that supports C++17 (particularly the
 `any` object found in the standard library for C++17). On Windows, MSVS 2017's
-compiler supports C++17. On Linux, GCC > 7.0 should suffice. To use CMake with
-Photon you must use CMake 3.8 or above.
+compiler supports C++17. On Linux, GCC > 7.0 should suffice. Clang is currently
+untested. To use CMake with Photon you must use CMake 3.8 or above.
 
 ### Building
 In `photon/`:
@@ -49,7 +50,7 @@ In `photon/`:
 * `$ cd build`
 * `$ cmake ..`
 
-On Windows, use the generated .sln files.
+On Windows, use the generated PHOTON.sln files.
 
 On Linux, CMake generates a MakeFile. Invoke it with `make` while in `build/`.
 
@@ -63,11 +64,11 @@ Using `build/` isn't necessary but `build/` and `Build/` are included in the
 ### [Contributing]
 
 ### [Implementation Help]
-There is also a Doxygen file available. Simply go over to `doc` and run
-`doxygen doxyfile` to generate HTML docs.
+There is also a Doxygen file available. Simply `cd` over to `doc` and run
+`doxygen doxyfile` to generate HTML/LaTeX docs.
 
 # License
-Photon is licensed under the [MIT License]
+Photon is licensed under the [MIT License].
 
 
 [1]: https://en.wikipedia.org/wiki/Entity%E2%80%93component%E2%80%93system "Wikipedia entry"

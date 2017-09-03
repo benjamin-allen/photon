@@ -36,6 +36,8 @@ namespace photon {
 
 	/// \brief The base class from which custom entity managers are defined.
 	///
+	/// \tparam ... The list of components for the entity manager to use
+	///
 	/// \c EntityManagerBase is responsible for many things, the most
 	/// important of which is the \c componentCollection , a vector of pointers
 	/// to vectors of components. This part of the API is the most volatile and
@@ -43,12 +45,23 @@ namespace photon {
 	template <typename... Components>
 	class EntityManagerBase {
 	private:
-		template <typename... Cs> typename std::enable_if<sizeof...(Cs) == 0>::type registerComponent();
+	
+		/// \brief Adds a component to the collection, given a variadic template
+		/// list
 		template <typename C, typename... Cs> void registerComponent();
-		template <typename... Cs> typename std::enable_if<sizeof...(Cs) == 0>::type destroyComponent();
+		
+		template <typename... Cs> typename std::enable_if<sizeof...(Cs) == 0>::type registerComponent();
+		
+		/// \brief Deletes a component from the collection givin a variadic template
+		/// list
 		template <typename C, typename... Cs> void destroyComponent();
-		template <typename... Cs> typename std::enable_if<sizeof...(Cs) == 0>::type growComponent();
+		
+		template <typename... Cs> typename std::enable_if<sizeof...(Cs) == 0>::type destroyComponent();
+		
+		/// \brief Expands the component data in the collection
 		template <typename C, typename... Cs> void growComponent();
+		
+		template <typename... Cs> typename std::enable_if<sizeof...(Cs) == 0>::type growComponent();
 
 		/// \brief The number of entities currently active in the world.
 		/// \private
@@ -68,7 +81,7 @@ namespace photon {
 
 	public:
 
-		/// \brief Base constructor for EntityManagerBase.
+		/// \brief Base constructor for EntityManagerBase
 		EntityManagerBase();
 
 		/// \brief Virtual destructor for EntityManagerBase.
@@ -90,6 +103,9 @@ namespace photon {
 		/// \c componentCollection
 		template <class C> unsigned int getComponentVectorIndex();
 
+        /// \brief Returns a reference to the component vector
+        /// \tparam C The class of the vector component to be returned
+        /// \return A shared pointer object to the vector reference
 		template <class C> std::shared_ptr<std::vector<C>> getVectorReference();
 
 		/// \brief Adds an entity to the entity manager.

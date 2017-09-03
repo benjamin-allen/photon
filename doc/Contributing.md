@@ -32,7 +32,7 @@ but consistency is.
 * Class and Struct names are in `CamelCase`
 * Private variables are prefixed with `_`, such as `_myVar`
 * Opening braces are on the same line
-* Template code definitions go in `.tpp` files instead of the headers
+* Template code definitions go in `.ipp` files instead of the headers
 
 
 [Implementation.md]: ./Implementation.md

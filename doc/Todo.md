@@ -17,12 +17,9 @@ where improvements to Photon can take place.
   * if possible, store types and retrieve?
 
 ### EntityManager
-  * Smart pointers
   * Better, streamlined interfaces
-    * Easily retrieve pointers to vectors
-    * Easily modify an entitie's component data
+    * Easily modify an entity's component data
     * Batch modify component data
-    * Batch add
     * Batch remove
     * Batch everything
   * Multithreading?
@@ -32,6 +29,8 @@ where improvements to Photon can take place.
   * expand() causes performance to fall off of a cliff (.3 ms vs 19 ms)
 
 ### System
+  * Use better methods to handle entities. Current one is janky and not
+    guaranteed to function.
   * Systems will have a lot to implement if components get changed
   * Thread safety if multithreading becomes supported
   * Message service support if that becomes a thing

@@ -85,9 +85,14 @@ to the data stored in the Entity Manager.
 1. Again, there are no entities
 2. All usable entity managers must derive from `EntityManagerBase`, which leaves
    a few methods to be implemented
-    * The user is intended to implement a constructor, destructor, and data 
-      expansion method. A planned update may render the first two requirements
-      obsolete
+    * When deriving, the user will provide the EntityManager base with a list of
+	  components to manage. E.g:
+	  ```
+	  class EM : public EntityManager<CollisionComponent, RenderingComponent> {
+		  EM : EntityManager<CollisionComponent, RenderingComponent>() { }
+	  }
+	  ```
+    * Reviewing the [tutorial][2] on entity manager usage may help understanding.
 3. Component data is stored as vectors of various components, accessible via 
    pointers to those vectors. The pointers are stored in a vector of `any`
    objects (you can read a bit more about C++17's `std::any` [here][1]). This
@@ -110,18 +115,17 @@ to the data stored in the Entity Manager.
       `addEntity()` and `removeEntity(uint entity)` to change this value
         * Additionally, `addEntity()` can use this value to add an entity in
           O(1) time
-    * `_indexCount`: `EntityManagerBase` resizes its vectors, it does not
+    * `_indexCount`: `EntityManagerBase` resizes its vectors; it does not
       reserve and rely on `push_back` to add values. `_indexCount` is one 
       greater than the highest-accessible index in the collection
     * `_componentRegistry`: The entity manager's private component registry
 2. Helper Functions:
-    * `getEntityCount()`: returns `_entityCount`_
+    * `getEntityCount()`: returns `_entityCount`
     * `getComponentVectorIndex<Component C>()`: a function that accesses the
       component registry and retrieves position of the collection element 
       containing that vector
-    * `registerComponent<Component C>()` adds a listing the component registry,
-      creates the associated vector in heap memory, and adds a reference to the
-      collection
+	* `getVectorReference<Component C>()` returns a reference to a component
+	  vector containing the specified component data.s 
 3. Entity Management Functions:
     * `addEntity()`: Sets the first deactivated entity it can find to activated
     * `addEntities(uint count)`: Batch initialization of entities
@@ -130,15 +134,8 @@ to the data stored in the Entity Manager.
     * `setComponentActiveState<Component C>(uint, bool)`: Sets an entity's
       component's activity status
 4. Virtual Functions:
-    * `expand()`: called when the collection needs to allocate more space for
-      data
-    * `grow<Component C>()`: `Expand()` should be defined in derived classes
-      and called for each component in the collection
     * There is a virtual destructor
-    * To simplify deletion, `destroy<Component>()` can be called, which 
-      properly deletes component data by dereferencing the pointer inside the
-      any object, and then resets the `any` object in the collection so there's
-      no dangling pointer
 
 
 [1]: http://en.cppreference.com/w/cpp/utility/any
+[2]: Tutorial.md
