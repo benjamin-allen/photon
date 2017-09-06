@@ -89,7 +89,6 @@ namespace photon {
 		unsigned int cIndex = _componentRegistry.getIndex<C>();
 		std::shared_ptr<std::vector<C>> cVec = std::any_cast<std::shared_ptr<std::vector<C>>>(componentCollection[cIndex]);
 		cVec->resize(cVec->size() * PHOTON_EXPANSION_FACTOR); // Should have gone with this the first time
-		_indexCount *= PHOTON_EXPANSION_FACTOR;
 		growComponent<Cs...>();
 	}
 

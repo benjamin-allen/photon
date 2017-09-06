@@ -64,6 +64,7 @@ namespace photon {
 			growComponent<IDComponent>();
 			growComponent<Components...>();
 			idVec->at(_entityCount++).activate(); // post increment is correct
+			_indexCount *= PHOTON_EXPANSION_FACTOR;
 			return _entityCount;
 		}
 
@@ -92,6 +93,7 @@ namespace photon {
 		while((int)_indexCount - (int)count < (int)_entityCount) {
 			growComponent<IDComponent>();
 			growComponent<Components...>();
+			_indexCount *= PHOTON_EXPANSION_FACTOR;
 		}
 
 		// Fill in missing entities first
