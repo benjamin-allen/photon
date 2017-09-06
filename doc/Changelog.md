@@ -2,6 +2,11 @@
 
 All notable changes between releases can be found here.
 
+## 2017-09-06 - Version 0.2.1
+#### Fixed
+* Adding entities should no longer cause crashes after enough expansion on
+  entity managers using more than a single component.
+
 ## 2017-09-03 - Version 0.2.0
 #### Added
 * A method, `getVectorReference()` to EntityManagerBase which retrieves a 
