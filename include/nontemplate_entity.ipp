@@ -23,22 +23,21 @@
 // SOFTWARE.
 
 #pragma once
-#include "entitymanager.hpp"
+#include "entity.hpp"
 
 namespace photon {
 
 	template <typename EM>
-	class Entity {
-	private:
-		unsigned int _reference;
+	Entity<EM>::Entity(EM* target) {
+		_target = target;
+		if(!_target) {
+			throw std::invalid_argument("Unsuitable target EntityManager");
+		}
+		_reference = UINT_MAX;
+	}
 
-		EM* _target;
-
-	public:
-		Entity(EM* target);
-
-		template <class C> C* getComponent(bool returnCopy);
-
-		void remove();
-	};
+	template <typename EM>
+	Entity<EM>::remove() {
+		_target->removeEntity(_reference);
+	}
 }

@@ -23,22 +23,19 @@
 // SOFTWARE.
 
 #pragma once
-#include "entitymanager.hpp"
+#include "entity.hpp"
 
 namespace photon {
 
 	template <typename EM>
-	class Entity {
-	private:
-		unsigned int _reference;
-
-		EM* _target;
-
-	public:
-		Entity(EM* target);
-
-		template <class C> C* getComponent(bool returnCopy);
-
-		void remove();
-	};
+	template <class C>
+	C* Entity::getComponent(bool returnCopy = false) {
+		auto v = _target->getVectorReference<C>();
+		if(returnCopy) {
+			return v->at(_reference);
+		}
+		else {
+			return &(v->at(_reference));
+		}
+	}
 }
