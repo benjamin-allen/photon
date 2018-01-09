@@ -41,11 +41,14 @@ if(WIN32)
 		include/entitymanager.hpp
 		include/system.hpp
 		include/photon.hpp
+		include/entity.hpp
 		include/template_component.ipp
 		include/template_entitymanager.ipp
 		include/template_system.ipp
+		include/template_entity.ipp
 		include/nontemplate_entitymanager.ipp
 		include/nontemplate_system.ipp
+		include/nontemplate_entity.ipp
 	)
 else()
 	set(PHOTON_LIBRARY_INCLUDES)

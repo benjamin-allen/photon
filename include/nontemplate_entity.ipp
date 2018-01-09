@@ -37,7 +37,21 @@ namespace photon {
 	}
 
 	template <typename EM>
+	Entity<EM>::Entity(EM* target, unsigned int reference) {
+		_target = target;
+		if(!_target) {
+			throw std::invalid_argument("Unsuitable target EntityManager");
+		}
+		_reference = reference;
+	}
+
+	template <typename EM>
 	Entity<EM>::remove() {
 		_target->removeEntity(_reference);
+	}
+
+	template <typename EM>
+	Entity<EM>::isActive() {
+		return this.getComponent<IDComponent>().isActive();
 	}
 }

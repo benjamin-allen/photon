@@ -37,7 +37,15 @@ namespace photon {
 	public:
 		Entity(EM* target);
 
-		template <class C> C* getComponent(bool returnCopy);
+		Entity(EM* target, unsigned int reference)
+
+		template <class C> C* getComponent();
+		
+		template <class C> C getComponentCopy();
+
+		template <class C> bool isActive();
+
+		bool isActive();
 
 		void remove();
 	};

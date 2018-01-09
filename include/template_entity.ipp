@@ -29,13 +29,21 @@ namespace photon {
 
 	template <typename EM>
 	template <class C>
-	C* Entity::getComponent(bool returnCopy = false) {
+	C* Entity<EM>::getComponent() {
 		auto v = _target->getVectorReference<C>();
-		if(returnCopy) {
-			return v->at(_reference);
-		}
-		else {
-			return &(v->at(_reference));
-		}
+		return &(v->at(_reference));
+	}
+
+	template <typename EM>
+	template <class C>
+	C Entity<EM>::getComponentCopy() {
+		auto v = _target->getVectorReference<C>();
+		return v->at(_reference);
+	}
+
+	template <typename EM>
+	template <class C>
+	bool Entity<EM>::isActive() {
+		return this.getComponent<C>().isActive();
 	}
 }
