@@ -50,3 +50,6 @@ namespace photon {
 		void remove();
 	};
 }
+
+#include "template_entity.ipp"
+#include "nontemplate_entity.ipp"
